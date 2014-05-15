@@ -1,0 +1,25 @@
+{
+  "name": "react-events",
+  "version": "0.1.0",
+  "author": "Joe Hudson <joehud@gmail.com>",
+  "description": "event manager for react components",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jhudson8/react-events.git"
+  },
+  "keywords": [
+    "react",
+    "mixin"
+  ],
+  "devDependencies": {
+    "react-mixin-manager": "*",
+    "react": "*",
+    "chai": "*",
+    "mocha": "*",
+    "sinon": "*",
+    "sinon-chai": "*",
+    "uglify-js": "*",
+    "underscore": "*"
+  },
+  "license": "MIT"
+}
