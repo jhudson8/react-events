@@ -1,7 +1,7 @@
 react-events
 ============
 
-Declarative event definitions for backbone components
+Declarative event definitions for [React](http://facebook.github.io/react/) components
 
 ***Problem:*** Event management is a manual process of binding and unbinding with [React](http://facebook.github.io/react/) components.  This is usually associated with, but not limited to, window events.
 
