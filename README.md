@@ -24,14 +24,16 @@ Dependencies
 
 Usage
 --------------
-Components that include the ```events``` mixin (registered automatically by including this script) can include an ```events``` attribute to declare events that should be monitored very similar to [Backbone](http://backbonejs.org/).View events.
+Components that include the ```events``` mixin (registered with [react-mixin-manager](https://github.com/jhudson8/react-mixin-manager)) can include an ```events``` attribute to declare events that should be monitored very similar to [Backbone](http://backbonejs.org/).View events.
 
-By default, the following events can be bound (but custom event handlers can be added)
+By default, the following events are supported out of the box but custom event handlers can be included.
 
 * window events
-* DOM events (available but should use React attributes if you can)
+* DOM events (available but you should use React attributes if you can)
 * ```ref``` events (using ```on``` and ```off``` of a component identified with a particular [ref](http://facebook.github.io/react/docs/more-about-refs.html))
 
+
+Generally, event listeners are declared like this
 ```
 React.createClass({
   events: {
@@ -41,6 +43,7 @@ React.createClass({
 })
 ```
 The ```type``` and ```path``` values are specific to different event handlers.
+
 
 Window Events
 --------------
@@ -57,24 +60,9 @@ React.createClass({
 });
 ```
 
-DOM Events
---------------
-event signature: ```dom:{DOM events separated by space}:{query path}```
-```
-React.createClass({
-  events: {
-    'dom:click:button': 'onClick'
-  },
-  mixin: ['events'],
-  onClick: function() {
-    // will fire when the button is clicked and "this" is the parent component
-  }
-});
-```
-
 Ref Events
 --------------
-event signature: ```ref:{ref name}:{event name}```
+```ref:{ref name}:{event name}```
 
 If you aren't familiar with ref usage, see [this](http://facebook.github.io/react/docs/more-about-refs.html).  This assumes that the component identified by the ref name implements ***on*** and ***off*** methods.  If so, specific events from that component will be caught in the parent component.
 ```
@@ -92,6 +80,22 @@ React.createClass({
 });
 ```
 
+DOM Events
+--------------
+```dom:{DOM events separated by space}:{query path}```
+```
+React.createClass({
+  events: {
+    'dom:click:button': 'onClick'
+  },
+  mixin: ['events'],
+  onClick: function() {
+    // will fire when the button is clicked and "this" is the parent component
+  }
+});
+```
+
+
 Multiple Event Declarations
 -----------------
 You can bind to as many events as you need to:
@@ -107,29 +111,40 @@ React.createClass({
 });
 ```
 
+Supporting Component on/off
+=================
+When using the ```ref``` event handler, the component should support the on/off methods methods.  While this script does not include the implementation of that, it does provide a hook for including your own impl when the ```events``` mixin is included.
+
+```
+React.events.mixin = objectThatHashOnOffMethods;
+```
+
+If you include [react-backbone](https://github.com/jhudson8/react-backbone) this will be set automatically for you.
+
+By
+
 Custom Event Handlers
 =================
 All events supported by default use the same API as the custom event handler.  Using ```React.events.handle```, you can add support for a custom event handler.  This could be useful for adding an application specific global event bus for example.
 
 API
 -----------
-```
-/**
- * Register an event handler
- * @param identifier {string} the event type (first part of event definition)
- * @param handler {function(options, callback)} which returns an object containing "on" and "off" methods
- *   * @param options {object} event definition options which currently only includes the "path" attribute
- *   * @param callback {function} callback event to be executed when the custom event is triggered
- *   * @param standardAccessors {object or true} indicates that a standard handler type should be used for simpleer initialization.
- *        This can either be `true` to use "on" and "off" as the bind/unbind method names or {on, off} to identify specific bind/unbind method names
- *        If a standard handler is used, the definition of the `handler` parameter is altered and is described below
- * @param handler (in standard mode) {object or function}
- *   * (as object) the object used as the event handler (for example `window`)
- *   * (as function(name, event)) a function which returns the object used as the event handler
- *
- * The event descriptor will be split into parts (name and event) "{name}:{event}" and the event handler will be called with on/off(name, event)
- */
-```
+```React.events.handle(identifier, handler, standardAccessor)```: register a customer event handler
+
+* ***identifier*** *{string}* the event type (first part of event definition)
+* ***handler*** *{function(options, callback)}* which returns an object containing ```on``` and ```off``` methods
+   * ***options*** *{object}* event definition options which currently only includes the "path" attribute
+   * ***callback*** *{function}* callback event to be executed when the custom event is triggered
+* ***standardAccessors*** *{object or ```true```}* indicates that a standard handler type should be used for simpleer initialization.
+    This can either be ```true``` to use ```on``` and ```off``` as the bind/unbind method names or {on, off} to identify specific bind/unbind method names
+    If a standard handler is used, the definition of the ```handler``` parameter is altered and is described below
+ 
+handler (in standard mode) *{object or function}*
+   * ***(as object)*** the object used as the event handler (for example ```window```)
+   * ***(as function(name, event))*** a function which returns the object used as the event handler
+
+The event descriptor will be split into parts (name and event) ```{name}:{event}``` and the event handler will be called with ```on/off(name, event)```
+
 
 This is better described with the default events as examples as each represents a unique event handler registration scenario
 
