@@ -82,6 +82,7 @@ React.createClass({
 
 DOM Events
 --------------
+*note: [jquery](http://jquery.com/) (or impl that supports ```$().on(eventName, elementSelector)```) is required for these events*
 ```dom:{DOM events separated by space}:{query path}```
 ```
 React.createClass({
