@@ -171,7 +171,7 @@ The event descriptor will be split into parts (name and event) ```{name}:{event}
 
 This is better described with the default events as examples as each represents a unique event handler registration scenario
 
-window events (standard event handler type and static target)
+***window events (standard event handler type with custom on/off methods and static target)***
 ```
   /**
    * Bind to window events
@@ -184,7 +184,7 @@ window events (standard event handler type and static target)
   });
 ```
 
-ref events (standard event handler type and dynamic target)
+***ref events (standard event handler type with dynamic target)***
 ```
   /**
    * Bind to events on components that are given a [ref](http://facebook.github.io/react/docs/more-about-refs.html)
@@ -196,7 +196,7 @@ ref events (standard event handler type and dynamic target)
   }, true);
 ```
 
-DOM events (custom handler which must return on/off methods)
+***DOM events (custom handler which must return an object with on/off methods)***
 ```
   /**
    * Bind to DOM element events (recommended solution is to use React "on..." attributes)
