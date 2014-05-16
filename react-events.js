@@ -122,15 +122,17 @@
 
 
   //// REGISTER THE DEFAULT EVENT HANDLERS
-  /**
-   * Bind to window events
-   * format: "window:{event name}"
-   * example: events: { 'window:scroll': 'onScroll' }
-   */
-  eventManager.handle('window', global.window, {
-    on: 'addEventListener',
-    off: 'removeEventListener'
-  });
+  if (typeof window != 'undefined') {
+    /**
+     * Bind to window events
+     * format: "window:{event name}"
+     * example: events: { 'window:scroll': 'onScroll' }
+     */
+    eventManager.handle('window', window, {
+      on: 'addEventListener',
+      off: 'removeEventListener'
+    });
+  }
 
   /**
    * Bind to events on components that are given a [ref](http://facebook.github.io/react/docs/more-about-refs.html)
