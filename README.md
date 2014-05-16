@@ -115,7 +115,7 @@ React.createClass({
 
 Supporting Component on/off
 =================
-When using the ```ref``` event handler, the component should support the on/off methods methods.  While this script does not include the implementation of that, it does provide a hook for including your own impl when the ```events``` mixin is included.
+When using the ```ref``` event handler, the component should support the on/off methods.  While this script does not include the implementation of that, it does provide a hook for including your own impl when the ```events``` mixin is included.
 
 ```
 React.events.mixin = objectThatHashOnOffMethods;
