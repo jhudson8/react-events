@@ -220,7 +220,7 @@ You can add your own global event bus handler (assuming it supported on/off even
 ```
 React.events.handle('app', appEventHandler);
 ```
-which could then be bound by your views using
+which could then be bound by your React components using
 ```
   events: {
     'app:some-event': 'onSomeEvent'
