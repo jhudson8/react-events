@@ -123,7 +123,28 @@ React.events.mixin = objectThatHashOnOffMethods;
 
 If you include [react-backbone](https://github.com/jhudson8/react-backbone) this will be set automatically for you.
 
-By
+You will the have the ability to do the following:
+```
+var MyComponent = React.createClass({
+  mixins: ['event'],
+  ...
+  onSomethingHappened: function() {
+    this.trigger('something-happened');
+  }
+});
+...
+
+var ParentComponent = React.createClass({
+  mixin: ['events'],
+  events: {
+    'ref:myComponent:something-happened': 'onSomethingHappened'
+  },
+  render: function() {
+    return <div><MyComponent ref="myComponent"/></div>;
+  },
+  onSomethingHappened: function() { ... }
+});
+```
 
 Custom Event Handlers
 =================
