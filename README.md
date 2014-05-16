@@ -216,7 +216,7 @@ This is better described with the default events as examples as each represents 
   });
 ```
 
-your own global event bus custom handler (assuming it supported on/off events like eventHandler.on(eventName[, additionalArguments]) )
+You can add your own global event bus handler (assuming it supported on/off events) like the following example:
 ```
 React.events.handle('app', appEventHandler);
 ```
