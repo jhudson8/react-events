@@ -178,7 +178,7 @@ window events (standard event handler type and static target)
    * format: "window:{event name}"
    * example: events: { 'window:scroll': 'onScroll' }
    */
-  React.events.handle('window', global.window, {
+  React.events.handle('window', window, {
     on: 'addEventListener',
     off: 'removeEventListener'
   });
