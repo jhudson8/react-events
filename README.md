@@ -113,7 +113,6 @@ React.createClass({
 });
 ```
 
-Supporting Component on/off
 "triggerWith" mixin
 -----------------
 This will expose a new mixin called "triggerWith".  this allows for easy closure binding of component event triggering when React events occur.
@@ -127,19 +126,20 @@ React.createClass({
 // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
 ```
 
+Adding on/off/trigger to React Components
 =================
-When using the ```ref``` event handler, the component should support the on/off methods.  While this script does not include the implementation of that, it does provide a hook for including your own impl when the ```events``` mixin is included.
+When using the ```ref``` event handler, the component should support the on/off methods.  While this script does not include the implementation of that, it does provide a hook for including your own impl when the ```events``` mixin is included using ```React.events.mixin```.
 
 ```
-React.events.mixin = objectThatHashOnOffMethods;
+React.events.mixin = objectThatHasOnOffMethods;
 ```
 
-If you include [react-backbone](https://github.com/jhudson8/react-backbone) this will be set automatically for you.
+And, ff you include [react-backbone](https://github.com/jhudson8/react-backbone) this will be set automatically for you as well as ```model``` event bindings.
 
 You will the have the ability to do the following:
 ```
-var MyComponent = React.createClass({
-  mixins: ['event'],
+var ChildComponent = React.createClass({
+  mixins: ['events'],
   ...
   onSomethingHappened: function() {
     this.trigger('something-happened');
@@ -148,14 +148,16 @@ var MyComponent = React.createClass({
 ...
 
 var ParentComponent = React.createClass({
-  mixin: ['events'],
+  mixin: ['events', 'modelEventBinder'],
   events: {
+    'model:onChange': 'onModelChange',
     'ref:myComponent:something-happened': 'onSomethingHappened'
   },
   render: function() {
-    return <div><MyComponent ref="myComponent"/></div>;
+    return <div><ChildComponent ref="myComponent"/></div>;
   },
-  onSomethingHappened: function() { ... }
+  onSomethingHappened: function() { ... },
+  onModelChange: function() { ... }
 });
 ```
 
@@ -165,57 +167,44 @@ All events supported by default use the same API as the custom event handler.  U
 
 API
 -----------
-```React.events.handle(identifier, handler, standardAccessor)```: register a customer event handler
+```React.events.handle(identifier, optionsOrHandler)```: register a customer event handler
 
 * ***identifier*** *{string}* the event type (first part of event definition)
-* ***handler*** *{function(options, callback)}* which returns an object containing ```on``` and ```off``` methods
-   * ***options*** *{object}* event definition options which currently only includes the "path" attribute
-   * ***callback*** *{function}* callback event to be executed when the custom event is triggered
-* ***standardAccessors*** *{object or ```true```}* indicates that a standard handler type should be used for simpleer initialization.
-    This can either be ```true``` to use ```on``` and ```off``` as the bind/unbind method names or {on, off} to identify specific bind/unbind method names
-    If a standard handler is used, the definition of the ```handler``` parameter is altered and is described below
- 
-handler (in standard mode) *{object or function}*
-   * ***(as object)*** the object used as the event handler (for example ```window```)
-   * ***(as function(name, event))*** a function which returns the object used as the event handler
+* ***handlerOrOptions*** *{function(options, callback) *OR* options object}*
 
-The event descriptor will be split into parts (name and event) ```{name}:{event}``` and the event handler will be called with ```on/off(name, event)```
+*handlerOrOptions as function(options, callback)* a function which returns the object used as the event handler.
+  * ***options {object}: will contain a *path* attribute - the event key (without the handler key prefix).
+          if the custom handler was registered as "foo" and events hash was { "foo:abc": "..." }, the path is "abc"
+  * ***callback {function}: the callback function to be bound to the event
+
+*handlerOrOptions as options*: will use a predefined "standard" handler;  this assumes the event format of "{handler identifier}:{target identifier}:{event name}"
+  * ***target {object or function(targetIdentifier, eventName)} the target to bind/unbind from or the functions which retuns this target
+  * ***onKey {string} the attribute which identifies the event binding function on the target (default is "on")
+  * ***offKey {string} the attribute which identifies the event un-binding function on the target (default is "off")
 
 
-This is better described with the default events as examples as each represents a unique event handler registration scenario
+For example, the following are the implementations of the event handlers provided by default:
 
 ***window events (standard event handler type with custom on/off methods and static target)***
 ```
-  /**
-   * Bind to window events
-   * format: "window:{event name}"
-   * example: events: { 'window:scroll': 'onScroll' }
-   */
-  React.events.handle('window', window, {
-    on: 'addEventListener',
-    off: 'removeEventListener'
-  });
+React.events.handle('window', {
+  target: window,
+  onKey: 'addEventListener',
+  offKey: 'removeEventListener'
+});
 ```
 
 ***ref events (standard event handler type with dynamic target)***
 ```
-  /**
-   * Bind to events on components that are given a [ref](http://facebook.github.io/react/docs/more-about-refs.html)
-   * format: "ref:{ref name}:{event name}"
-   * example: "ref:myComponent:something-happened": "onSomethingHappened"
-   */
-  React.events.handle('ref', function(name) {
+React.events.handle('ref', {
+  target: function(name) {
     return this.refs[name];
-  }, true);
+  }
+});
 ```
 
 ***DOM events (custom handler which must return an object with on/off methods)***
 ```
-  /**
-   * Bind to DOM element events (recommended solution is to use React "on..." attributes)
-   * format: "dom:{event names separated with space}:{element selector}"
-   * example: events: { 'dom:click:a': 'onAClick' }
-   */
   React.events.handle('dom', function(options, callback) {
     var parts = options.path.match(splitter);
     return {
@@ -229,9 +218,11 @@ This is better described with the default events as examples as each represents 
   });
 ```
 
-You can add your own global event bus handler (assuming it supported on/off events) like the following example:
+You could add your own global event bus handler (assuming it supported on/off events) like the following example:
 ```
-React.events.handle('app', appEventHandler);
+React.events.handle('app', {
+  target: myGlobalEventHandler
+});
 ```
 which could then be bound by your React components using
 ```
