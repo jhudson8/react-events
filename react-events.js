@@ -50,73 +50,76 @@
     callback = function() {
       return _callback.apply(context, arguments);
     };
-    var parts = event.split(':'),
-        handlerName = parts[0],
+    var parts = event.match(splitter),
+        handlerName = parts[1],
         handler = handlers[handlerName],
-        path = parts.slice(1).join(':');
+        path = parts[2];
     if (!handler) {
       throw 'no handler registered for "' + event + '"';
     }
     return handler.call(context, {path: path}, callback);
   }
 
-  /**
-   * Return a handler which will use a standard format of on(eventName, handlerFunction) and off(eventName, handlerFunction)
-   * the objectRetrievalFunction can either be the object itself or a function which returns the object ("this" will be the React component)
-   * objectRetrievalFunction will be called with "this" as the React component and 2 arguments the name and event name
-   * '{handlerType}:{name}:{eventName}'
-   */
-  function createStandardHandler(target, accessors) {
+  // predefined templates of common handler types for simpler custom handling
+  var handlerTemplates = {
 
-    return function(options, func) {
-      var match = options.path.match(splitter);
-      if (match) {
-          var name = match[1],
-              event = match[2];
-
+    /**
+     * Return a handler which will use a standard format of on(eventName, handlerFunction) and off(eventName, handlerFunction)
+     * @param data {object} handler options
+     *   - target {object or function()}: the target to bind to or function(name, event) which returns this target ("this" is the React component)
+     *   - onKey {string}: the function attribute used to add the event binding (default is "on")
+     *   - offKey {string}: the function attribute used to add the event binding (default is "off")
+     */
+    standard: function(data) {
+      var accessors = {
+            on: data.onKey || 'on',
+            off: data.offKey || 'off'
+          },
+          target = data.target;
+      return function(options, callback) {
+        var path = options.path;
         function checkTarget(type, context) {
           return function() {
-            var _target = (typeof target === 'function') ? target.call(context, name, event) : target;
+            var _target = (typeof target === 'function') ? target.call(context, path) : target;
             if (_target) {
               // register the handler
-              _target[accessors[type]](event, func);
+              _target[accessors[type]](path, callback);
             }
           };
         }
 
         return {
           on: checkTarget('on', this),
-          off: checkTarget('off', this)
+          off: checkTarget('off', this),
+          initialize: data.initialize
         };
-      } else {
-        throw "invalid event handler";
-      }
-    };
-  }
+      };
+    }
+  };
 
   var eventManager = React.events = {
 
     /**
      * Register an event handler
      * @param identifier {string} the event type (first part of event definition)
-     * @param handler {function(options, callback)} which returns an object containing "on" and "off" methods
-     *   * @param options {object} event definition options which currently only includes the "path" attribute
-     *   * @param callback {function} callback event to be executed when the custom event is triggered
-     *   * @param standardAccessors {object or true} indicates that a standard handler type should be used for simpleer initialization.
-     *        This can either be `true` to use "on" and "off" as the bind/unbind method names or {on, off} to identify specific bind/unbind method names
-     *        If a standard handler is used, the definition of the `handler` parameter is altered and is described below
-     * @param handler (in standard mode) {object or function}
-     *   * (as object) the object used as the event handler (for example `window`)
-     *   * (as function(name, event)) a function which returns the object used as the event handler
+     * @param handlerOrOptions {function(options, callback) *OR* options object}
      *
-     * The event descriptor will be split into parts (name and event) "{name}:{event}" and the event handler will be called with on/off(name, event)
+     * handlerOrOptions as function(options, callback) a function which returns the object used as the event handler.
+     *      @param options {object}: will contain a *path* attribute - the event key (without the handler key prefix).
+     *           if the custom handler was registered as "foo" and events hash was { "foo:abc": "..." }, the path is "abc"
+     *      @param callback {function}: the callback function to be bound to the event
+     *
+     * handlerOrOptions as options: will use a predefined "standard" handler;  this assumes the event format of "{handler identifier}:{target identifier}:{event name}"
+     *      @param target {object or function(targetIdentifier, eventName)} the target to bind/unbind from or the functions which retuns this target
+     *      @param onKey {string} the attribute which identifies the event binding function on the target (default is "on")
+     *      @param offKey {string} the attribute which identifies the event un-binding function on the target (default is "off")
      */
-    handle: function(identifier, handler, standardAccessors) {
-      if (standardAccessors) {
-        standardAccessors = (standardAccessors === true) ? {on: 'on', off: 'off'} : standardAccessors;
-        handler = createStandardHandler(handler, standardAccessors);
+    handle: function(identifier, optionsOrHandler) {
+      if (typeof optionsOrHandler !== 'function') {
+        // it's options
+        optionsOrHandler = handlerTemplates[optionsOrHandler.type || 'standard'](optionsOrHandler);
       }
-      handlers[identifier] = handler;
+      handlers[identifier] = optionsOrHandler;
     }
   };
 
@@ -128,9 +131,10 @@
      * format: "window:{event name}"
      * example: events: { 'window:scroll': 'onScroll' }
      */
-    eventManager.handle('window', window, {
-      on: 'addEventListener',
-      off: 'removeEventListener'
+    eventManager.handle('window', {
+      target: window,
+      onKey: 'addEventListener',
+      offKey: 'removeEventListener'
     });
   }
 
@@ -139,9 +143,25 @@
    * format: "ref:{ref name}:{event name}"
    * example: "ref:myComponent:something-happened": "onSomethingHappened"
    */
-  eventManager.handle('ref', function(name) {
-    return this.refs[name];
-  }, true);
+  eventManager.handle('ref', function(options, callback) {
+    var parts = options.path.match(splitter),
+        refKey = parts[1],
+        event = parts[2];
+    return {
+      on: function() {
+        var target = this.refs[refKey];
+        if (target) {
+          target.on(event, callback);
+        }
+      },
+      off: function() {
+        var target = this.refs[refKey];
+        if (target) {
+          target.off(event, callback);
+        }
+      }
+    };
+  });
 
   /**
    * Bind to DOM element events (recommended solution is to use React "on..." attributes)
@@ -163,12 +183,17 @@
 
   //// REGISTER THE REACT MIXIN
   React.mixins.add('events', function() {
-    var rtn = {
+    var rtn = [{
       getInitialState: function() {
         var handlers = this._eventHandlers = [];
         if (this.events) {
+          var handler;
           for (var event in this.events) {
-            handlers.push(createHandler(event, this.events[event], this));
+            handler = createHandler(event, this.events[event], this);
+            if (handler.initialize) {
+              handler.initialize.call(this);
+            }
+            handlers.push(handler);
           }
         }
         return null;
