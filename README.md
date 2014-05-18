@@ -114,6 +114,19 @@ React.createClass({
 ```
 
 Supporting Component on/off
+"triggerWith" mixin
+-----------------
+This will expose a new mixin called "triggerWith".  this allows for easy closure binding of component event triggering when React events occur.
+```
+React.createClass({
+  mixins: ['triggerWith'],
+  render: function() {
+    return <button type="button" onClick={this.triggerWith('button-clicked', 'param1', 'param2')}>Click me</button>
+  }
+})
+// when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
+```
+
 =================
 When using the ```ref``` event handler, the component should support the on/off methods.  While this script does not include the implementation of that, it does provide a hook for including your own impl when the ```events``` mixin is included.
 
