@@ -2,7 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.1.2...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.2.0...master)
+
+## v0.2.0 - May 18th, 2014
+- expose a new mixin: "triggerWith" - b62497a, fc5eb13
+- bug fix: bind external "events" (on/off/trigger) object methods to state rather than just using "this" - f351712
+- change handler API (not backwards compatible) - 381a352
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.1.2...v0.2.0)
 
 ## v0.1.2 - May 16th, 2014
 - added window existence check before including window events - b71d259
