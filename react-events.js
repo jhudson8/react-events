@@ -212,9 +212,29 @@
           handlers[i].off.call(this);
         }
       }
-    };
+    }];
+
+    function bind(func, context) {
+      return function() {
+        func.apply(context, arguments);
+      };
+    }
+    if (eventManager.mixin) {
+      var eventHandlerMixin = {},
+          state = {};
+      for (var name in eventManager.mixin) {
+        eventHandlerMixin[name] = bind(eventManager.mixin[name], state);
+      }
+      eventHandlerMixin.getInitialState = function() {
+        return {
+          __events: state
+        };
+      };
+      rtn.push(eventHandlerMixin);
+    }
     // React.eventHandler.mixin should contain impl for "on" "off" and "trigger"
-    return [rtn, eventManager.mixin];
+    return rtn;
+  });
   });
 
 });
