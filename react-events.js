@@ -36,19 +36,22 @@
 })(function(React) {
 
   var handlers = {},
-      splitter = /^([^:]+):?(.*)/;
+      splitter = /^([^:]+):?(.*)/,
+      noArgMethods = ['forceUpdate'];
 
   // wrapper for event implementations - includes on/off methods
   function createHandler(event, callback, context) {
-    var _callback = callback;
+    var _callback = callback,
+        noArg;
     if (typeof callback === 'string') {
+      noArg = (noArgMethods.indexOf(callback) >= 0);
       _callback = context[callback];
     }
     if (!callback) {
       throw 'no callback function exists for "' + callback + '"';
     }
     callback = function() {
-      return _callback.apply(context, arguments);
+      return _callback.apply(context, noArg ? [] : arguments);
     };
     var parts = event.match(splitter),
         handlerName = parts[1],
