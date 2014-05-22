@@ -187,3 +187,70 @@ describe('ref events', function() {
       expect(obj.onBarEvent.thisValues[0]).to.eql(obj);
     });
 });
+
+describe('custom event bindings', function() {
+  var hander;
+  beforeEach(function() {
+    handler = {};
+    handler.on = sinon.spy();
+    handler.off = sinon.spy();
+    handler.onCustom = sinon.spy();
+    handler.offCustom = sinon.spy();
+  });
+  it('standard methods (on/off) and target callback (factory)', function() {
+    React.events.handle('custom1', {
+      target: function() {
+        return handler;
+      }
+    });
+
+    var obj = newComponent({
+      events: {
+        'custom1:foo': 'onFoo',
+      },
+      onFoo: sinon.spy()
+    });
+    obj.mount();
+    expect(handler.on.callCount).to.eql(1);
+    expect(handler.off.callCount).to.eql(0);
+
+    obj.unmount();
+    expect(handler.off.callCount).to.eql(1);
+  });
+
+  it('custom methods (on/off) and static target', function() {
+    React.events.handle('custom2', {
+      target:  handler,
+      onKey: 'onCustom',
+      offKey: 'offCustom'
+    });
+
+    var obj = newComponent({
+      events: {
+        'custom2:foo': 'onFoo',
+      },
+      onFoo: sinon.spy()
+    });
+    obj.mount();
+    expect(handler.onCustom.callCount).to.eql(1);
+    expect(handler.offCustom.callCount).to.eql(0);
+
+    obj.unmount();
+    expect(handler.offCustom.callCount).to.eql(1);
+  });
+
+  it('should not provide any arguments if the handler method is "forceUpdate"', function() {
+    React.events.handle('custom3', {
+      target:  handler
+    });
+
+    var obj = newComponent({
+      events: {
+        'custom3:foo': 'forceUpdate',
+      },
+      forceUpdate: sinon.spy()
+    });
+    obj.mount();
+    expect(handler.on.callCount).to.eql(1);
+  });
+});
