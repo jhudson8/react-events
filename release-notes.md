@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.2.0...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.2.1...master)
+
+## v0.2.1 - May 22nd, 2014
+- add custom events / forceUpdate unit tests - 30ae1dd
+- do not send any arguments if the handler event name is "forceUpdate" as that will throw an exception by React - b7122fe
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.2.0...v0.2.1)
 
 ## v0.2.0 - May 18th, 2014
 - expose a new mixin: "triggerWith" - b62497a, fc5eb13
