@@ -39,7 +39,7 @@ React.createClass({
   events: {
     '{type}:{path}': (callback function or attribute name identifying a callback function)
   },
-  mixin: ['events']
+  mixins: ['events']
 })
 ```
 The ```type``` and ```path``` values are specific to different event handlers.
@@ -53,7 +53,7 @@ React.createClass({
   events: {
     'window:scroll': 'onScroll'
   },
-  mixin: ['events'],
+  mixins: ['events'],
   onScroll: function() {
     // will fire when a window scroll event has been triggered and "this" is the parent component
   }
@@ -70,7 +70,7 @@ React.createClass({
   events: {
     'ref:someComponent:something-happened': 'onSomethingHappened'
   },
-  mixin: ['events'],
+  mixins: ['events'],
   onSomethingHappened: function() {
     // "someComponent" triggered the "something-happened" event and "this" is the parent component
   }
@@ -90,7 +90,7 @@ React.createClass({
   events: {
     'dom:click:button': 'onClick'
   },
-  mixin: ['events'],
+  mixins: ['events'],
   onClick: function() {
     // will fire when the button is clicked and "this" is the parent component
   }
@@ -108,7 +108,7 @@ React.createClass({
     'window:resize': 'onResize',
     ...
   },
-  mixin: ['events'],
+  mixins: ['events'],
   ...
 });
 ```
@@ -148,7 +148,7 @@ var ChildComponent = React.createClass({
 ...
 
 var ParentComponent = React.createClass({
-  mixin: ['events', 'modelEventBinder'],
+  mixins: ['events', 'modelEventBinder'],
   events: {
     'model:onChange': 'onModelChange',
     'ref:myComponent:something-happened': 'onSomethingHappened'
