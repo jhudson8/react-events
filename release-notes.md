@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.2.1...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.3.0...master)
+
+## v0.3.0 - June 4th, 2014
+- add 'repeat' and '!repeat' events - 9001bbf
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.2.1...v0.3.0)
 
 ## v0.2.1 - May 22nd, 2014
 - add custom events / forceUpdate unit tests - 30ae1dd
