@@ -60,6 +60,23 @@ React.createClass({
 });
 ```
 
+Repeat Events
+--------------
+event signature: ```repeat:{duration in millis}``` *and* ```!repeat:{duration in millis}```
+```
+React.createClass({
+  events: {
+    'repeat:3000': function() {
+      // this will be called every 3 seconds only when the component is mounted
+    },
+    '!repeat:3000': function() {
+      // same as above but will *only* be called when this web page is the active page (requestAnimationFrame)
+    },
+  },
+  mixins: ['events']
+});
+```
+
 Ref Events
 --------------
 ```ref:{ref name}:{event name}```

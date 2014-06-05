@@ -184,6 +184,52 @@
   });
 
 
+  /**
+   * Allow binding to setInterval events
+   * format: "repeat:{milis}"
+   * example: events: { 'repeat:3000': 'onRepeat3Sec' }
+   */
+  eventManager.handle('repeat', function(options, callback) {
+    var delay = parseInt(options.path, 10), id;
+    return {
+      on: function() {
+        id = setInterval(callback, delay);
+      },
+      off: function() {
+        id = !!clearInterval(id);
+      }
+    };
+  });
+
+
+  /**
+   * Like setInterval events *but* will only fire when the user is actively viewing the web page
+   * format: "!repeat:{milis}"
+   * example: events: { '!repeat:3000': 'onRepeat3Sec' }
+   */
+  eventManager.handle('!repeat', function(options, callback) {
+    var delay = parseInt(options.path, 10), keepGoing;
+    function doInterval(suppressCallback) {
+      if (suppressCallback !== true) {
+        callback();
+      }
+      setTimeout(function() {
+        if (keepGoing) {
+          requestAnimationFrame(doInterval);
+        }
+      }, delay);
+    }
+    return {
+      on: function() {
+        keepGoing = true;
+        doInterval(true);
+      },
+      off: function() {
+        keepGoing = false;
+      }
+    };
+  });
+
   //// REGISTER THE REACT MIXIN
   React.mixins.add('events', function() {
     var rtn = [{
