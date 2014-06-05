@@ -115,7 +115,7 @@ React.createClass({
 
 "triggerWith" mixin
 -----------------
-This will expose a new mixin called "triggerWith".  this allows for easy closure binding of component event triggering when React events occur.
+This will expose a "triggerWith" function.  this allows for easy closure binding of component event triggering when React events occur.
 ```
 React.createClass({
   mixins: ['triggerWith'],
@@ -134,7 +134,7 @@ When using the ```ref``` event handler, the component should support the on/off 
 React.events.mixin = objectThatHasOnOffMethods;
 ```
 
-And, ff you include [react-backbone](https://github.com/jhudson8/react-backbone) this will be set automatically for you as well as ```model``` event bindings.
+And, if you include [react-backbone](https://github.com/jhudson8/react-backbone) this will be set automatically for you as well as ```model``` event bindings.
 
 You will the have the ability to do the following:
 ```
