@@ -190,9 +190,9 @@ API
 * ***handlerOrOptions*** *{function(options, callback) *OR* options object}*
 
 *handlerOrOptions as function(options, callback)* a function which returns the object used as the event handler.
-  * ***options {object}: will contain a *path* attribute - the event key (without the handler key prefix).
+  * ***options*** *{object}*: will contain a *path* attribute - the event key (without the handler key prefix).
           if the custom handler was registered as "foo" and events hash was { "foo:abc": "..." }, the path is "abc"
-  * ***callback {function}: the callback function to be bound to the event
+  * ***callback*** *{function}*: the callback function to be bound to the event
 
 *handlerOrOptions as options*: will use a predefined "standard" handler;  this assumes the event format of "{handler identifier}:{target identifier}:{event name}"
   * ***target {object or function(targetIdentifier, eventName)} the target to bind/unbind from or the functions which retuns this target
