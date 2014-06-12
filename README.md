@@ -196,6 +196,43 @@ var MyClass = React.createClass({
 });
 ```
 
+Callback Wrappers
+===============
+It is sometimes useful to wrap callback methods for throttling, cacheing or other purposes.  Because an instance is required for this, the previously described instance reference ```callback``` can be used which can be verbose.  Special callback wrappers can be used to accomplish this.  If the event name is prefixed with ```*someSpecialName(args):...``` the ```soneSpecialName``` callback wrapper will be invoked.
+
+This is best described with an example
+```
+  events: {
+    '*throttle(300):window:resize'L 'forceUpdate'
+  }
+```
+
+While no special handlers are implemented by default, by including [react-backbone](https://github.com/jhudson8/react-backbone), the following special handlers are available (see [underscore](http://underscorejs.org) for more details)
+
+* memoize
+* delay
+* defer
+* throttle
+* debounce
+* once
+
+To implement your own special handler, just reference a wrapper function by name on ```React.events.specials```.  For example:
+```
+// this will log a message whenever this callback is invoked
+React.events.specials.log = function(callback, args) {
+  return function() {
+    console.log(args[0]);
+    callback.apply(this, arguments);
+  }
+}
+```
+Which can be referenced with
+```
+  events: {
+    '*log(my message):...': '...';
+  }
+```
+
 
 Custom Event Handlers
 =================

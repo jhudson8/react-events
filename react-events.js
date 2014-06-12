@@ -37,28 +37,50 @@
 
   var handlers = {},
       splitter = /^([^:]+):?(.*)/,
+      specialWrapper = /^\*([^\(]+)\(([^)]*)\):(.*)/,
       noArgMethods = ['forceUpdate'];
 
   // wrapper for event implementations - includes on/off methods
-  function createHandler(event, callback, context) {
-    var _callback = callback,
-        noArg;
-    if (typeof callback === 'object') {
-      // use the "callback" attribute to get the callback function.  useful if you need to reference the component as "this"
-      _callback = callback.callback.call(this);
+  function createHandler(event, callback, context, dontWrapCallback) {
+    if (!dontWrapCallback) {
+      var _callback = callback,
+          noArg;
+      if (typeof callback === 'object') {
+        // use the "callback" attribute to get the callback function.  useful if you need to reference the component as "this"
+        _callback = callback.callback.call(this);
+      }
+      if (typeof callback === 'string') {
+        noArg = (noArgMethods.indexOf(callback) >= 0);
+        _callback = context[callback];
+      }
+      if (!_callback) {
+        throw 'no callback function exists for "' + callback + '"';
+      }
+      callback = function() {
+        return _callback.apply(context, noArg ? [] : arguments);
+      };
     }
-    if (typeof callback === 'string') {
-      noArg = (noArgMethods.indexOf(callback) >= 0);
-      _callback = context[callback];
+
+    // check for special wrapper function
+    var match = event.match(specialWrapper);
+    if (match) {
+      var specialMethodName = match[1],
+          args = match[2].split(/\s*,\s*/),
+          rest = match[3],
+          specialHandler = React.events.specials[specialMethodName];
+      if (specialHandler) {
+        if (args.length === 1 && args[0] === '') {
+          args = [];
+        }
+        callback = specialHandler.call(context, callback, args);
+        return createHandler(rest, callback, context, true);
+      } else {
+        throw new Error('invalid special event handler "' + specialMethodName + "'");
+      }
     }
-    if (!callback) {
-      throw 'no callback function exists for "' + callback + '"';
-    }
-    callback = function() {
-      return _callback.apply(context, noArg ? [] : arguments);
-    };
+
     var parts = event.match(splitter),
-        handlerName = parts[1],
+        handlerName = parts[1];
         handler = handlers[handlerName],
         path = parts[2];
     if (!handler) {
@@ -105,6 +127,8 @@
   };
 
   var eventManager = React.events = {
+    // placeholder for special methods
+    specials: {},
 
     /**
      * Register an event handler
