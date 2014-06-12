@@ -178,6 +178,25 @@ var ParentComponent = React.createClass({
 });
 ```
 
+Instance References
+=================
+If you need to reference ```this``` when declaring your event handler, you can use an object with a ```callback``` object.
+
+```
+var MyClass = React.createClass({
+  mixins: ['events'],
+  events: {
+    'window:resize': {
+      callback: function() {
+        // return the callback function;  executed after the instance has been created
+        // so "this" can be referenced as the react component instance
+      }
+    }
+  }
+});
+```
+
+
 Custom Event Handlers
 =================
 All events supported by default use the same API as the custom event handler.  Using ```React.events.handle```, you can add support for a custom event handler.  This could be useful for adding an application specific global event bus for example.

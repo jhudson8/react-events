@@ -43,6 +43,10 @@
   function createHandler(event, callback, context) {
     var _callback = callback,
         noArg;
+    if (typeof callback === 'object') {
+      // use the "callback" attribute to get the callback function.  useful if you need to reference the component as "this"
+      _callback = callback.callback.call(this);
+    }
     if (typeof callback === 'string') {
       noArg = (noArgMethods.indexOf(callback) >= 0);
       _callback = context[callback];
