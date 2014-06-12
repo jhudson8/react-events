@@ -203,7 +203,7 @@ It is sometimes useful to wrap callback methods for throttling, cacheing or othe
 This is best described with an example
 ```
   events: {
-    '*throttle(300):window:resize'L 'forceUpdate'
+    '*throttle(300):window:resize': 'forceUpdate'
   }
 ```
 
