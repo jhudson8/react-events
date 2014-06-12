@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.3.0...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.4.0...master)
+
+## v0.4.0 - June 12th, 2014
+- added special callback wrappers (useful for throttling, cacheing and other reusable callback wrappers) - 3085655
+- add object with "callback" parameter support with instance definitions to be able to refer to "this" as the component instance when declaring the callback function. - 55d5e2a
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.3.0...v0.4.0)
 
 ## v0.3.0 - June 4th, 2014
 - add 'repeat' and '!repeat' events - 9001bbf
