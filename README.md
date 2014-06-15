@@ -144,7 +144,7 @@ React.createClass({
 ```
 
 Adding on/off/trigger to React Components
-=================
+-----------------
 When using the ```ref``` event handler, the component should support the on/off methods.  While this script does not include the implementation of that, it does provide a hook for including your own impl when the ```events``` mixin is included using ```React.events.mixin```.
 
 ```
@@ -179,7 +179,7 @@ var ParentComponent = React.createClass({
 ```
 
 Instance References
-=================
+-----------------
 If you need to reference ```this``` when declaring your event handler, you can use an object with a ```callback``` object.
 
 ```
@@ -197,13 +197,13 @@ var MyClass = React.createClass({
 ```
 
 Callback Wrappers
-===============
+-----------------
 It is sometimes useful to wrap callback methods for throttling, cacheing or other purposes.  Because an instance is required for this, the previously described instance reference ```callback``` can be used which can be verbose.  Special callback wrappers can be used to accomplish this.  If the event name is prefixed with ```*someSpecialName(args):...``` the ```soneSpecialName``` callback wrapper will be invoked.
 
 This is best described with an example
 ```
   events: {
-    '*throttle(300):window:resize'L 'forceUpdate'
+    '*throttle(300):window:resize': 'forceUpdate'
   }
 ```
 
