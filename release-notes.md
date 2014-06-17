@@ -2,7 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.4.0...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.4.1...master)
+
+## v0.4.1 - June 16th, 2014
+- update dependencies - bda8de9
+- allow for customer handlers to match the path by regular expression - 0bcdca0
+- add bower.json - 8372180
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.4.0...v0.4.1)
 
 ## v0.4.0 - June 12th, 2014
 - added special callback wrappers (useful for throttling, cacheing and other reusable callback wrappers) - 3085655
