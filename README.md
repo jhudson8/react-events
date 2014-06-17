@@ -12,6 +12,8 @@ Benefits:
 * No manual event cleanup
 * All events are declared in 1 place for easier readability
 
+***To see an example app using this (and other react plugins working together), [check this out](https://github.com/jhudson8/react-plugins-united-example)***
+
 Installation
 ==============
 * Browser: include *react-events[.min].js* after the listed dependencies
