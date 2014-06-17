@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.4.1...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.4.2...master)
+
+## v0.4.2 - June 17th, 2014
+- fix bower.json - 9ab5bbc
+- update dependencies docs - 1aa6bbc
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.4.1...v0.4.2)
 
 ## v0.4.1 - June 16th, 2014
 - update dependencies - bda8de9
