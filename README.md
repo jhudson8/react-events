@@ -20,7 +20,7 @@ Installation
 Dependencies
 --------------
 * [React](http://facebook.github.io/react/)
-* [react-mixin-manager](https://github.com/jhudson8/react-mixin-manager) (>= 0.2.0)
+* [react-mixin-manager](https://github.com/jhudson8/react-mixin-manager) (>= 0.5.2)
 
 Usage
 --------------
