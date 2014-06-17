@@ -242,7 +242,7 @@ API
 -----------
 ```React.events.handle(identifier, optionsOrHandler)```: register a customer event handler
 
-* ***identifier*** *{string}* the event type (first part of event definition)
+* ***identifier*** *{string or regular expression}* the event type (first part of event definition)
 * ***handlerOrOptions*** *{function(options, callback) *OR* options object}*
 
 *handlerOrOptions as function(options, callback)* a function which returns the object used as the event handler.
@@ -265,6 +265,16 @@ React.events.handle('window', {
   onKey: 'addEventListener',
   offKey: 'removeEventListener'
 });
+```
+
+```
+// this will match any key that starts with custom-
+React.events.handle(/custom-.*/, function(options, callback) {
+  // if the event declaration was "custom-foo:bar"
+  var key = options.key;  // customm-foo
+  var path = options.path; // bar
+  ...
+}
 ```
 
 ***ref events (standard event handler type with dynamic target)***

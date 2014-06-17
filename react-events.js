@@ -36,6 +36,7 @@
 })(function(React) {
 
   var handlers = {},
+      patternHandlers = [],
       splitter = /^([^:]+):?(.*)/,
       specialWrapper = /^\*([^\(]+)\(([^)]*)\):(.*)/,
       noArgMethods = ['forceUpdate'];
@@ -81,12 +82,20 @@
 
     var parts = event.match(splitter),
         handlerName = parts[1];
-        handler = handlers[handlerName],
-        path = parts[2];
+        path = parts[2],
+        handler = handlers[handlerName];
+
+    // check pattern handlers if no match
+    for (var i=0; !handler && i<patternHandlers.length; i++) {
+      if (handlerName.match(patternHandlers[i].pattern)) {
+        handler = patternHandlers[i].handler;
+      }
+    }
     if (!handler) {
       throw 'no handler registered for "' + event + '"';
     }
-    return handler.call(context, {path: path}, callback);
+
+    return handler.call(context, {key: handlerName, path: path}, callback);
   }
 
   // predefined templates of common handler types for simpler custom handling
@@ -150,7 +159,11 @@
         // it's options
         optionsOrHandler = handlerTemplates[optionsOrHandler.type || 'standard'](optionsOrHandler);
       }
-      handlers[identifier] = optionsOrHandler;
+      if (identifier instanceof RegExp) {
+        patternHandlers.push({pattern: identifier, handler: optionsOrHandler});
+      } else {
+        handlers[identifier] = optionsOrHandler;
+      }
     }
   };
 

@@ -20,6 +20,7 @@ function newComponent(attributes, mixins) {
   mixins = mixins || React.mixins.get('events');
 
   var obj = {
+    getDOMNode: sinon.spy(),
     mount: function() {
       this._mounted = true;
       this.trigger('componentWillMount');
@@ -197,10 +198,12 @@ describe('custom event bindings', function() {
     handler.onCustom = sinon.spy();
     handler.offCustom = sinon.spy();
   });
+
   it('standard methods (on/off) and target callback (factory)', function() {
+    var _handler = handler;
     React.events.handle('custom1', {
       target: function() {
-        return handler;
+        return _handler;
       }
     });
 
@@ -211,16 +214,17 @@ describe('custom event bindings', function() {
       onFoo: sinon.spy()
     });
     obj.mount();
-    expect(handler.on.callCount).to.eql(1);
-    expect(handler.off.callCount).to.eql(0);
+    expect(_handler.on.callCount).to.eql(1);
+    expect(_handler.off.callCount).to.eql(0);
 
     obj.unmount();
-    expect(handler.off.callCount).to.eql(1);
+    expect(_handler.off.callCount).to.eql(1);
   });
 
   it('custom methods (on/off) and static target', function() {
+    var _handler = handler;
     React.events.handle('custom2', {
-      target:  handler,
+      target:  _handler,
       onKey: 'onCustom',
       offKey: 'offCustom'
     });
@@ -232,16 +236,17 @@ describe('custom event bindings', function() {
       onFoo: sinon.spy()
     });
     obj.mount();
-    expect(handler.onCustom.callCount).to.eql(1);
-    expect(handler.offCustom.callCount).to.eql(0);
+    expect(_handler.onCustom.callCount).to.eql(1);
+    expect(_handler.offCustom.callCount).to.eql(0);
 
     obj.unmount();
-    expect(handler.offCustom.callCount).to.eql(1);
+    expect(_handler.offCustom.callCount).to.eql(1);
   });
 
   it('should not provide any arguments if the handler method is "forceUpdate"', function() {
+    var _handler = handler;
     React.events.handle('custom3', {
-      target:  handler
+      target:  _handler
     });
 
     var obj = newComponent({
@@ -251,6 +256,28 @@ describe('custom event bindings', function() {
       forceUpdate: sinon.spy()
     });
     obj.mount();
-    expect(handler.on.callCount).to.eql(1);
+    expect(_handler.on.callCount).to.eql(1);
+  });
+
+  it('should handle regular expression handlers', function() {
+    var _handler = handler;
+    React.events.handle(/custom-.*/, {
+      target:  _handler,
+      onKey: 'onCustom',
+      offKey: 'offCustom'
+    });
+
+    var obj = newComponent({
+      events: {
+        'custom-foo:foo': 'onFoo',
+      },
+      onFoo: sinon.spy()
+    });
+    obj.mount();
+    expect(_handler.onCustom.callCount).to.eql(1);
+    expect(_handler.offCustom.callCount).to.eql(0);
+
+    obj.unmount();
+    expect(_handler.offCustom.callCount).to.eql(1);
   });
 });
