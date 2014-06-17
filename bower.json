@@ -26,6 +26,6 @@
     "tests"
   ],
   "dependencies": {
-    "react-mixin-manager: ">=0.2.0"
+    "react-mixin-manager: ">=0.5.2"
   }
 }
