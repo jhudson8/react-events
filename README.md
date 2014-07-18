@@ -233,6 +233,77 @@ Which can be referenced with
 All events supported by default use the same API as the custom event handler.  Using ```React.events.handle```, you can add support for a custom event handler.  This could be useful for adding an application specific global event bus for example.
 
 
+API: Mixins
+---------
+
+### events
+
+This mixin is required if you want to be able to use declaritive event definitions.
+
+In addition, it also includes component state binding for the event handler implementation (not included).
+
+The event handler implementation is included with [react-backbone](https://github.com/jhudson8/react-backbone) or can be specified  by setting ```React.events.mixin```.  The event handler is simply an object that contains method implementations for
+
+* trigger
+* on
+* off
+
+```
+React.events.mixin = myObjectThatSupportsEventMethods;
+```
+
+#### trigger(eventName[, parameters...])
+* ***eventName***: the model event name to trigger
+* ***parameters***: any event parameters to be included
+
+Trigger the specified event.
+
+
+#### on(eventName, callback[, context])
+* ***eventName***: the event name
+* ***callback***: the event callback function
+* ***context***: the callback context
+
+Listen for the specific event and execute the callback function when the event is fired.
+
+
+#### once(eventName, callback[, context])
+* ***eventName***: the event name
+* ***callback***: the event callback function
+* ***context***: the callback context
+
+Listen for the specific event and execute the callback function when the event is fired ***1 time only***.
+
+
+#### off(eventName, callback[, context])
+* ***eventName***: the event name
+* ***callback***: the event callback function
+* ***context***: the callback context
+
+Remove the specified event binding.
+
+
+### triggerWith
+
+#### triggerWith(event[, parameters...])
+* ***event***: the event name
+* ***parameters***: any additional parameters that should be added to the trigger
+
+A convienance method which allows for easy closure binding of component event triggering when React events occur.
+
+```
+React.createClass({
+  mixins: ['triggerWith'],
+  render: function() {
+
+    // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
+    return <button type="button" onClick={this.triggerWith('button-clicked', 'param1', 'param2')}>Click me</button>
+  }
+})
+
+```
+
+
 API
 --------
 ### React.events
@@ -303,75 +374,4 @@ which could then be bound by your React components using
   events: {
     'app:some-event': 'onSomeEvent'
   }
-```
-
-
-API: Mixins
----------
-
-### events
-
-This mixin is required if you want to be able to use declaritive event definitions.
-
-In addition, it also includes component state binding for the event handler implementation (not included).
-
-The event handler implementation is included with [react-backbone](https://github.com/jhudson8/react-backbone) or can be specified  by setting ```React.events.mixin```.  The event handler is simply an object that contains method implementations for
-
-* trigger
-* on
-* off
-
-```
-React.events.mixin = myObjectThatSupportsEventMethods;
-```
-
-#### trigger(eventName[, parameters...])
-* ***eventName***: the model event name to trigger
-* ***parameters***: any event parameters to be included
-
-Trigger the specified event.
-
-
-#### on(eventName, callback[, context])
-* ***eventName***: the event name
-* ***callback***: the event callback function
-* ***context***: the callback context
-
-Listen for the specific event and execute the callback function when the event is fired.
-
-
-#### once(eventName, callback[, context])
-* ***eventName***: the event name
-* ***callback***: the event callback function
-* ***context***: the callback context
-
-Listen for the specific event and execute the callback function when the event is fired ***1 time only***.
-
-
-#### off(eventName, callback[, context])
-* ***eventName***: the event name
-* ***callback***: the event callback function
-* ***context***: the callback context
-
-Remove the specified event binding.
-
-
-### triggerWith
-
-#### triggerWith(event[, parameters...])
-* ***event***: the event name
-* ***parameters***: any additional parameters that should be added to the trigger
-
-A convienance method which allows for easy closure binding of component event triggering when React events occur.
-
-```
-React.createClass({
-  mixins: ['triggerWith'],
-  render: function() {
-
-    // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
-    return <button type="button" onClick={this.triggerWith('button-clicked', 'param1', 'param2')}>Click me</button>
-  }
-})
-
 ```
