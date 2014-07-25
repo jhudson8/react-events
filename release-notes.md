@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.4.2...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.4.3...master)
+
+## v0.4.3 - July 25th, 2014
+- fix ref event handlers in case the ref component changed during parent renders - cc934d8
+
+Compatibility notes:
+- TODO : What might have broken?
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.4.2...v0.4.3)
 
 ## v0.4.2 - June 17th, 2014
 - fix bower.json - 9ab5bbc
