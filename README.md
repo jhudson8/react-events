@@ -16,6 +16,11 @@ By default, the following events are supported out of the box but custom event h
 * repeat events
 
 
+Docs
+-------------
+Instead of reading this README file, you can [view it in fancydocs](http://jhudson8.github.io/fancydocs/index.html#project/jhudson8/react-events) for a better experience.
+
+
 Installation
 -------------
 * Browser: include *react-events[.min].js* after the listed dependencies
