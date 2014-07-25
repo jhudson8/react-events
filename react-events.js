@@ -290,6 +290,17 @@
   //// REGISTER THE REACT MIXIN
   React.mixins.add('events', function() {
     var rtn = [{
+      /**
+       * Return a callback fundtion that will trigger an event on "this" when executed with the provided parameters
+       */
+      triggerWith: function(eventName) {
+        var args = Array.prototype.slice.call(arguments),
+            self = this;
+        return function() {
+          self.trigger.apply(this, args);
+        };
+      },
+
       getInitialState: function() {
         var handlers = this._eventHandlers = [];
         if (this.events) {
@@ -351,19 +362,6 @@
     }
     // React.eventHandler.mixin should contain impl for "on" "off" and "trigger"
     return rtn;
-  });
-
-  React.mixins.add('triggerWith', {
-    /**
-     * Return a callback fundtion that will trigger an event on "this" when executed with the provided parameters
-     */
-    triggerWith: function(eventName) {
-      var args = Array.prototype.slice.call(arguments),
-          self = this;
-      return function() {
-        self.trigger.apply(this, args);
-      };
-    }
   });
 
 });
