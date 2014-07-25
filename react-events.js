@@ -190,18 +190,34 @@
   eventManager.handle('ref', function(options, callback) {
     var parts = options.path.match(splitter),
         refKey = parts[1],
-        event = parts[2];
+        event = parts[2],
+        bound, componentState;
     return {
       on: function() {
         var target = this.refs[refKey];
         if (target) {
+          componentState = target.state || target;
           target.on(event, callback);
+          bound = target;
         }
       },
       off: function() {
-        var target = this.refs[refKey];
-        if (target) {
-          target.off(event, callback);
+        if (bound) {
+          bound.off(event, callback);
+          bound = undefined;
+          componentState = undefined;
+        }
+      },
+      isStale: function() {
+        if (bound) {
+          var target = this.refs[refKey];
+          if (!target || (target.state || target) !== componentState) {
+            // if the target doesn't exist now and we were bound before or the target state has changed we are stale
+            return true;
+          }
+        } else {
+          // if we weren't bound before but the component exists now, we are stale
+          return !!this.refs[refKey];
         }
       }
     };
@@ -287,6 +303,17 @@
           }
         }
         return null;
+      },
+
+      componentDidUpdate: function() {
+        var handlers = this._eventHandlers, handler;
+        for (var i=0; i<handlers.length; i++) {
+          handler = handlers[i];
+          if (handler.isStale && handler.isStale.call(this)) {
+            handler.off.call(this);
+            handler.on.call(this);
+          }
+        }
       },
 
       componentDidMount: function() {

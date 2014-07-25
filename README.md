@@ -339,15 +339,6 @@ React.events.handle(/custom-.*/, function(options, callback) {
 }
 ```
 
-***ref events (standard event handler type with dynamic target)***
-```
-React.events.handle('ref', {
-  target: function(name) {
-    return this.refs[name];
-  }
-});
-```
-
 ***DOM events (custom handler which must return an object with on/off methods)***
 ```
   React.events.handle('dom', function(options, callback) {
