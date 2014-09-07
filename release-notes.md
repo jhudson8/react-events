@@ -2,7 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.4.3...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.5.0...master)
+
+## v0.5.0 - September 7th, 2014
+- add "react-component" keyword - 39f0ce1
+- remove the "triggerWith" mixin and move the triggerWith method into the "events" mixin - b489c2f
+- v0.4.3 - a694dac
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.4.3...v0.5.0)
 
 ## v0.4.3 - July 25th, 2014
 - fix ref event handlers in case the ref component changed during parent renders - cc934d8
