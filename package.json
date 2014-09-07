@@ -9,7 +9,8 @@
   },
   "keywords": [
     "react",
-    "mixin"
+    "mixin",
+    "react-component"
   ],
   "devDependencies": {
     "react-mixin-manager": "*",
