@@ -1,9 +1,17 @@
-var chai = require('chai'),
-    sinon = require('sinon'),
+var sinon = require('sinon'),
+    chai = require('chai'),
     sinonChai = require('sinon-chai'),
     expect = chai.expect,
     React = require('react'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    $on = sinon.spy(),
+    $off = sinon.spy(),
+    $ = sinon.spy(function() {
+      return {
+        on: $on,
+        off: $off
+      };
+    });
 chai.use(sinonChai);
 
 global.window = global.window || {
@@ -13,7 +21,7 @@ global.window = global.window || {
 
 // intitialize mixin-dependencies
 require('react-mixin-manager')(React);
-require('../react-events')(React);
+require('../react-events')(React, $);
 
 function newComponent(attributes, mixins) {
 
@@ -99,15 +107,6 @@ describe('window events', function() {
 
 
 describe('DOM events', function(){
-  var on = sinon.spy(),
-      off = sinon.spy();
-  global.$ = sinon.spy(function() {
-    return {
-      on: on,
-      off: off
-    };
-  });
-
   it('should on and off DOM events', function() {
     var obj = newComponent({
       events: {
@@ -123,23 +122,23 @@ describe('DOM events', function(){
 
     obj.mount();
     expect(obj.getDOMNode.callCount).to.eql(2);
-    expect(on.callCount).to.eql(2);
-    expect(off.callCount).to.eql(0);
-    expect(on.getCall(0)).to.have.been.calledWith('click', 'a');
-    expect(on.getCall(1)).to.have.been.calledWith('click', 'button');
+    expect($on.callCount).to.eql(2);
+    expect($off.callCount).to.eql(0);
+    expect($on.getCall(0)).to.have.been.calledWith('click', 'a');
+    expect($on.getCall(1)).to.have.been.calledWith('click', 'button');
 
-    on.getCall(0).args[2]('foo');
+    $on.getCall(0).args[2]('foo');
     expect(obj.onClickA.callCount).to.eql(1);
     expect(obj.onClickA).to.have.been.calledWith('foo');
     expect(obj.onClickA.thisValues[0]).to.eql(obj);
 
-    on.getCall(1).args[2]('bar');
+    $on.getCall(1).args[2]('bar');
     expect(obj.onClickButton.callCount).to.eql(1);
     expect(obj.onClickButton).to.have.been.calledWith('bar');
     expect(obj.onClickButton.thisValues[0]).to.eql(obj);
 
     obj.unmount();
-    expect(off.callCount).to.eql(2);
+    expect($off.callCount).to.eql(2);
   });
 });
 

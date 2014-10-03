@@ -24,7 +24,7 @@ Instead of reading this README file, you can [view it in fancydocs](http://jhuds
 Installation
 -------------
 * Browser: include *react-events[.min].js* after the listed dependencies
-* CommonJS: ```require('react-events')(require('react'));```
+* CommonJS: ```require('react-events')(require('react', require('jquery') /* only if using DOM events */ ));```
 
 
 Dependencies

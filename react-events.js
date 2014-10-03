@@ -25,15 +25,20 @@
  */
  (function(main) {
   if (typeof define === 'function' && define.amd) {
-    define(['react'], main);
+    // $ is intended to not be provided with define right now.
+    // $ is only used for the DOM event handler and I do not want to
+    // enforce the jquery requirement simply for the user of that handler.
+    // $ must be defined globally if using the DOM handler
+    define(['react'], function(React) { main(React, $); });
   } else if (typeof exports !== 'undefined' && typeof require !== 'undefined') {
-    module.exports = function(React) {
-      main(React);
+    // $ is only required if using the DOM events
+    module.exports = function(React, $) {
+      main(React, $);
     };
   } else {
-    main(React);
+    main(React, $);
   }
-})(function(React) {
+})(function(React, $) {
 
   var handlers = {},
       patternHandlers = [],
