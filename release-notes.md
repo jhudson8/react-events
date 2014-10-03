@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.5.0...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.5.1...master)
+
+## v0.5.1 - October 3rd, 2014
+- $ to be provided for commonJS - aaa0faf
+
+Compatibility notes:
+- TODO : What might have broken?
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.5.0...v0.5.1)
 
 ## v0.5.0 - September 7th, 2014
 - add "react-component" keyword - 39f0ce1
