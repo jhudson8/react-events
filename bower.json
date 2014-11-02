@@ -13,9 +13,9 @@
   ],
   "keywords": [
     "react",
-    "mixin",
-    "events",
-    "event"
+    "react-component",
+    "react-mixin-manager",
+    "events"
   ],
   "license": "MIT",
   "ignore": [
