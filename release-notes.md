@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.5.1...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.5.2...master)
+
+## v0.5.2 - November 2nd, 2014
+- [#1](https://github.com/jhudson8/react-events/issues/1) - Exception when using react-events with browserify
+- add package keyword "react-mixin-manager" - a70d493
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.5.1...v0.5.2)
 
 ## v0.5.1 - October 3rd, 2014
 - $ to be provided for commonJS - aaa0faf
