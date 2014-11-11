@@ -2,14 +2,7 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v1.0.0...master)
-
-## v1.0.0 - November 11th, 2014
-
-Compatibility notes:
-- TODO : What might have broken?
-
-[Commits](https://github.com/jhudson8/react-events/compare/v0.5.2...v1.0.0)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.5.2...master)
 
 ## v0.5.2 - November 2nd, 2014
 - [#1](https://github.com/jhudson8/react-events/issues/1) - Exception when using react-events with browserify
