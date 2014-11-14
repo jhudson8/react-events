@@ -2,7 +2,29 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.5.2...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.6.0...master)
+
+## v0.6.0 - November 14th, 2014
+- remove DOM event handler - cd6489f
+
+Compatibility notes:
+If you are using the "dom" event handler, you must now add that event handler in your own project (to remove the jquery dependency for this project)
+
+```
+React.events.handle('dom', function(options, callback) {
+  var parts = options.path.match(splitter);
+  return {
+    on: function() {
+      $(this.getDOMNode()).on(parts[1], parts[2], callback);
+    },
+    off: function() {
+      $(this.getDOMNode()).off(parts[1], parts[2], callback);
+    }
+  };
+});
+```
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.5.2...v0.6.0)
 
 ## v0.5.2 - November 2nd, 2014
 - [#1](https://github.com/jhudson8/react-events/issues/1) - Exception when using react-events with browserify
