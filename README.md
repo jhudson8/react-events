@@ -124,8 +124,27 @@ Event signature
 ```
 dom:{DOM events separated by space}:{query path}
 ```
+To avoid a a jquery dependency, this has been removed however it is simple to add this to your own project.  Simply copy this code below
+```
+/**
+ * Bind to DOM element events (recommended solution is to use React "on..." attributes)
+ * format: "dom:{event names separated with space}:{element selector}"
+ * example: events: { 'dom:click:a': 'onAClick' }
+ */
+React.events.handle('dom', function(options, callback) {
+  var parts = options.path.match(splitter);
+  return {
+    on: function() {
+      $(this.getDOMNode()).on(parts[1], parts[2], callback);
+    },
+    off: function() {
+      $(this.getDOMNode()).off(parts[1], parts[2], callback);
+    }
+  };
+});
+```
 
-Example
+And it can be used like what is shown below
 ```
 React.createClass({
   events: {

@@ -1,20 +1,20 @@
 /*!
  * react-events v0.5.2
  * https://github.com/jhudson8/react-events
- * 
- * 
+ *
+ *
  * Copyright (c) 2014 Joe Hudson<joehud_AT_gmail.com>
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,16 +29,16 @@
     // $ is only used for the DOM event handler and I do not want to
     // enforce the jquery requirement simply for the user of that handler.
     // $ must be defined globally if using the DOM handler
-    define(['react'], function(React) { main(React, $); });
+    define(['react'], function(React) { main(React); });
   } else if (typeof exports !== 'undefined' && typeof require !== 'undefined') {
     // $ is only required if using the DOM events
-    module.exports = function(React, $) {
-      main(React, $);
+    module.exports = function(React) {
+      main(React);
     };
   } else {
-    main(React, $);
+    main(React);
   }
-})(function(React, $) {
+})(function(React) {
 
   var handlers = {},
       patternHandlers = [],
@@ -224,23 +224,6 @@
           // if we weren't bound before but the component exists now, we are stale
           return !!this.refs[refKey];
         }
-      }
-    };
-  });
-
-  /**
-   * Bind to DOM element events (recommended solution is to use React "on..." attributes)
-   * format: "dom:{event names separated with space}:{element selector}"
-   * example: events: { 'dom:click:a': 'onAClick' }
-   */
-  eventManager.handle('dom', function(options, callback) {
-    var parts = options.path.match(splitter);
-    return {
-      on: function() {
-        $(this.getDOMNode()).on(parts[1], parts[2], callback);
-      },
-      off: function() {
-        $(this.getDOMNode()).off(parts[1], parts[2], callback);
       }
     };
   });

@@ -106,43 +106,6 @@ describe('window events', function() {
 });
 
 
-describe('DOM events', function(){
-  it('should on and off DOM events', function() {
-    var obj = newComponent({
-      events: {
-        'dom:click:a': 'onClickA',
-        'dom:click:button': 'onClickButton'
-      },
-      onClickA: sinon.spy(),
-      onClickButton: sinon.spy()
-    });
-    obj.getDOMNode = sinon.spy(function() {
-      return [];
-    });
-
-    obj.mount();
-    expect(obj.getDOMNode.callCount).to.eql(2);
-    expect($on.callCount).to.eql(2);
-    expect($off.callCount).to.eql(0);
-    expect($on.getCall(0)).to.have.been.calledWith('click', 'a');
-    expect($on.getCall(1)).to.have.been.calledWith('click', 'button');
-
-    $on.getCall(0).args[2]('foo');
-    expect(obj.onClickA.callCount).to.eql(1);
-    expect(obj.onClickA).to.have.been.calledWith('foo');
-    expect(obj.onClickA.thisValues[0]).to.eql(obj);
-
-    $on.getCall(1).args[2]('bar');
-    expect(obj.onClickButton.callCount).to.eql(1);
-    expect(obj.onClickButton).to.have.been.calledWith('bar');
-    expect(obj.onClickButton.thisValues[0]).to.eql(obj);
-
-    obj.unmount();
-    expect($off.callCount).to.eql(2);
-  });
-});
-
-
 describe('ref events', function() {
     var eventSpy = function() {
       return {
