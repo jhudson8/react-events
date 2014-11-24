@@ -23,13 +23,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- (function(main) {
+(function(main) {
   if (typeof define === 'function' && define.amd) {
     // $ is intended to not be provided with define right now.
     // $ is only used for the DOM event handler and I do not want to
     // enforce the jquery requirement simply for the user of that handler.
     // $ must be defined globally if using the DOM handler
-    define(['react'], function(React) { main(React); });
+    define(['react'], function(React) {
+      main(React);
+    });
   } else if (typeof exports !== 'undefined' && typeof require !== 'undefined') {
     // $ is only required if using the DOM events
     module.exports = function(React) {
@@ -41,16 +43,16 @@
 })(function(React) {
 
   var handlers = {},
-      patternHandlers = [],
-      splitter = /^([^:]+):?(.*)/,
-      specialWrapper = /^\*([^\(]+)\(([^)]*)\):(.*)/,
-      noArgMethods = ['forceUpdate'];
+    patternHandlers = [],
+    splitter = /^([^:]+):?(.*)/,
+    specialWrapper = /^\*([^\(]+)\(([^)]*)\):(.*)/,
+    noArgMethods = ['forceUpdate'];
 
   // wrapper for event implementations - includes on/off methods
   function createHandler(event, callback, context, dontWrapCallback) {
     if (!dontWrapCallback) {
       var _callback = callback,
-          noArg;
+        noArg;
       if (typeof callback === 'object') {
         // use the "callback" attribute to get the callback function.  useful if you need to reference the component as "this"
         _callback = callback.callback.call(this);
@@ -71,9 +73,9 @@
     var match = event.match(specialWrapper);
     if (match) {
       var specialMethodName = match[1],
-          args = match[2].split(/\s*,\s*/),
-          rest = match[3],
-          specialHandler = React.events.specials[specialMethodName];
+        args = match[2].split(/\s*,\s*/),
+        rest = match[3],
+        specialHandler = React.events.specials[specialMethodName];
       if (specialHandler) {
         if (args.length === 1 && args[0] === '') {
           args = [];
@@ -86,12 +88,12 @@
     }
 
     var parts = event.match(splitter),
-        handlerName = parts[1];
-        path = parts[2],
-        handler = handlers[handlerName];
+      handlerName = parts[1];
+    path = parts[2],
+      handler = handlers[handlerName];
 
     // check pattern handlers if no match
-    for (var i=0; !handler && i<patternHandlers.length; i++) {
+    for (var i = 0; !handler && i < patternHandlers.length; i++) {
       if (handlerName.match(patternHandlers[i].pattern)) {
         handler = patternHandlers[i].handler;
       }
@@ -100,7 +102,10 @@
       throw 'no handler registered for "' + event + '"';
     }
 
-    return handler.call(context, {key: handlerName, path: path}, callback);
+    return handler.call(context, {
+      key: handlerName,
+      path: path
+    }, callback);
   }
 
   // predefined templates of common handler types for simpler custom handling
@@ -115,12 +120,13 @@
      */
     standard: function(data) {
       var accessors = {
-            on: data.onKey || 'on',
-            off: data.offKey || 'off'
-          },
-          target = data.target;
+          on: data.onKey || 'on',
+          off: data.offKey || 'off'
+        },
+        target = data.target;
       return function(options, callback) {
         var path = options.path;
+
         function checkTarget(type, context) {
           return function() {
             var _target = (typeof target === 'function') ? target.call(context, path) : target;
@@ -165,7 +171,10 @@
         optionsOrHandler = handlerTemplates[optionsOrHandler.type || 'standard'](optionsOrHandler);
       }
       if (identifier instanceof RegExp) {
-        patternHandlers.push({pattern: identifier, handler: optionsOrHandler});
+        patternHandlers.push({
+          pattern: identifier,
+          handler: optionsOrHandler
+        });
       } else {
         handlers[identifier] = optionsOrHandler;
       }
@@ -194,9 +203,9 @@
    */
   eventManager.handle('ref', function(options, callback) {
     var parts = options.path.match(splitter),
-        refKey = parts[1],
-        event = parts[2],
-        bound, componentState;
+      refKey = parts[1],
+      event = parts[2],
+      bound, componentState;
     return {
       on: function() {
         var target = this.refs[refKey];
@@ -235,7 +244,8 @@
    * example: events: { 'repeat:3000': 'onRepeat3Sec' }
    */
   eventManager.handle('repeat', function(options, callback) {
-    var delay = parseInt(options.path, 10), id;
+    var delay = parseInt(options.path, 10),
+      id;
     return {
       on: function() {
         id = setInterval(callback, delay);
@@ -253,7 +263,9 @@
    * example: events: { '!repeat:3000': 'onRepeat3Sec' }
    */
   eventManager.handle('!repeat', function(options, callback) {
-    var delay = parseInt(options.path, 10), keepGoing;
+    var delay = parseInt(options.path, 10),
+      keepGoing;
+
     function doInterval(suppressCallback) {
       if (suppressCallback !== true) {
         callback();
@@ -283,7 +295,7 @@
        */
       triggerWith: function(eventName) {
         var args = Array.prototype.slice.call(arguments),
-            self = this;
+          self = this;
         return function() {
           self.trigger.apply(this, args);
         };
@@ -305,8 +317,9 @@
       },
 
       componentDidUpdate: function() {
-        var handlers = this._eventHandlers, handler;
-        for (var i=0; i<handlers.length; i++) {
+        var handlers = this._eventHandlers,
+          handler;
+        for (var i = 0; i < handlers.length; i++) {
           handler = handlers[i];
           if (handler.isStale && handler.isStale.call(this)) {
             handler.off.call(this);
@@ -317,14 +330,14 @@
 
       componentDidMount: function() {
         var handlers = this._eventHandlers;
-        for (var i=0; i<handlers.length; i++) {
+        for (var i = 0; i < handlers.length; i++) {
           handlers[i].on.call(this);
         }
       },
 
       componentWillUnmount: function() {
         var handlers = this._eventHandlers;
-        for (var i=0; i<handlers.length; i++) {
+        for (var i = 0; i < handlers.length; i++) {
           handlers[i].off.call(this);
         }
       }
@@ -337,7 +350,7 @@
     }
     if (eventManager.mixin) {
       var eventHandlerMixin = {},
-          state = {};
+        state = {};
       for (var name in eventManager.mixin) {
         eventHandlerMixin[name] = bind(eventManager.mixin[name], state);
       }
