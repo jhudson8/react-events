@@ -196,47 +196,68 @@
     });
   }
 
-  /**
-   * Bind to events on components that are given a [ref](http://facebook.github.io/react/docs/more-about-refs.html)
-   * format: "ref:{ref name}:{event name}"
-   * example: "ref:myComponent:something-happened": "onSomethingHappened"
-   */
-  eventManager.handle('ref', function(options, callback) {
-    var parts = options.path.match(splitter),
-      refKey = parts[1],
-      event = parts[2],
-      bound, componentState;
-    return {
-      on: function() {
-        var target = this.refs[refKey];
-        if (target) {
-          componentState = target.state || target;
-          target.on(event, callback);
-          bound = target;
-        }
-      },
-      off: function() {
-        if (bound) {
-          bound.off(event, callback);
-          bound = undefined;
-          componentState = undefined;
-        }
-      },
-      isStale: function() {
-        if (bound) {
-          var target = this.refs[refKey];
-          if (!target || (target.state || target) !== componentState) {
-            // if the target doesn't exist now and we were bound before or the target state has changed we are stale
-            return true;
-          }
-        } else {
-          // if we weren't bound before but the component exists now, we are stale
-          return !!this.refs[refKey];
-        }
-      }
-    };
-  });
+  var objectHandlers = {
+    /**
+     * Bind to events on components that are given a [ref](http://facebook.github.io/react/docs/more-about-refs.html)
+     * format: "ref:{ref name}:{event name}"
+     * example: "ref:myComponent:something-happened": "onSomethingHappened"
+     */
+    ref: function(refKey) {
+      return this.refs[refKey];
+    },
 
+    /**
+     * Bind to events on components that are provided as property values
+     * format: "prop:{prop name}:{event name}"
+     * example: "prop:componentProp:something-happened": "onSomethingHappened"
+     */
+    prop: function(propKey) {
+      return this.props[propKey];
+    }
+  };
+
+  function registerObjectHandler(key, objectFactory) {
+    eventManager.handle(key, function(options, callback) {
+      var parts = options.path.match(splitter),
+        objectKey = parts[1],
+        ev = parts[2],
+        bound, componentState;
+      return {
+        on: function() {
+          var target = objectFactory.call(this, objectKey);
+          if (target) {
+            componentState = target.state || target;
+            target.on(ev, callback);
+            bound = target;
+          }
+        },
+        off: function() {
+          if (bound) {
+            bound.off(ev, callback);
+            bound = undefined;
+            componentState = undefined;
+          }
+        },
+        isStale: function() {
+          if (bound) {
+            var target = objectFactory.call(this, objectKey);
+            if (!target || (target.state || target) !== componentState) {
+              // if the target doesn't exist now and we were bound before or the target state has changed we are stale
+              return true;
+            }
+          } else {
+            // if we weren't bound before but the component exists now, we are stale
+            return !!target;
+          }
+        }
+      };
+    });
+  }
+
+  var objectFactory;
+  for (var key in objectHandlers) {
+    registerObjectHandler(key, objectHandlers[key]);
+  }
 
   /**
    * Allow binding to setInterval events
