@@ -364,6 +364,52 @@
     }
     // React.eventHandler.mixin should contain impl for "on" "off" and "trigger"
     return rtn;
+  }, 'state');
+
+  /**
+   * Allow for managed bindings to any object which supports on/off.
+   */
+  React.mixins.add('listen', {
+    componentDidMount: function() {
+      // sanity check to prevent duplicate binding
+      _watchedEventsUnbindAll(true, this);
+      _watchedEventsBindAll(this);
+    },
+
+    componentWillUnmount: function() {
+      _watchedEventsUnbindAll(true, this);
+    },
+
+    // {event, callback, context, model}
+    listenTo: function(target, ev, callback, context) {
+      var data = ev ? {
+        event: ev,
+        callback: callback,
+        target: target,
+        context: context
+      } : target;
+      manageEvent.call(this, 'on', data);
+    },
+
+    listenToOnce: function(target, ev, callback, context) {
+      var data = {
+        event: ev,
+        callback: callback,
+        target: target,
+        context: context
+      };
+      manageEvent.call(this, 'once', data);
+    },
+
+    stopListening: function(target, ev, callback, context) {
+      var data = {
+        event: ev,
+        callback: callback,
+        target: target,
+        context: context
+      };
+      manageEvent.call(this, 'off', data);
+    }
   });
 
 });
