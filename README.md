@@ -3,41 +3,32 @@ react-events
 
 Declarative managed event bindings for [React](http://facebook.github.io/react/) components
 
+[view the fancydocs](http://jhudson8.github.io/fancydocs/index.html#project/jhudson8/react-events) for a better docs experience
+
 * No manual event cleanup
 * All events are declared in 1 place for easier readability
-
-Components that include the ```events``` mixin (registered with [react-mixin-manager](https://github.com/jhudson8/react-mixin-manager)) can include an ```events``` attribute to declare events that should be monitored very similar to [Backbone](http://backbonejs.org/).View events.
+* Provided ```listenTo``` API
 
 By default, the following events are supported out of the box but custom event handlers can be included.
 
 * window events
-* DOM events (available but you should use React attributes if you can)
 * ```ref``` events (using ```on``` and ```off``` of a component identified with a particular [ref](http://facebook.github.io/react/docs/more-about-refs.html))
+* ```props``` events (using ```on``` and ```off``` of a object identified with a particular property name
 * repeat events
-
-
-Docs
--------------
-Instead of reading this README file, you can [view it in fancydocs](http://jhudson8.github.io/fancydocs/index.html#project/jhudson8/react-events) for a better experience.
-
-
-Installation
--------------
-* Browser: include *react-events[.min].js* after the listed dependencies
-* CommonJS: ```require('react-events')(require('react'), require('jquery') /* only if using DOM events */ );```
-
 
 Dependencies
 --------------
 * [React](http://facebook.github.io/react/)
-* [react-mixin-manager](https://github.com/jhudson8/react-mixin-manager) (>= 0.5.2)
+* [react-mixin-manager](https://github.com/jhudson8/react-mixin-manager)
 
-
-Sections
+Installation
 -------------
+* Browser: include *react-events[.min].js* after the listed dependencies
+* CommonJS: ```require('react-events')(require('react');``` (after incliding [react-mixin-manager](https://github.com/jhudson8/react-mixin-manager))
 
-### Event Types
 
+API: Event Binding Definitions
+--------------
 Event listeners are declared using the ```events``` attribute.  To add this support the ```events``` mixin ***must*** be included with your component mixins.
 ```
 React.createClass({
@@ -49,8 +40,10 @@ React.createClass({
 ```
 The ```type``` and ```path``` values are specific to different event handlers.
 
-#### Window
-Event signature
+### window events
+Monitor window events (requires a global "window" variable).
+
+Syntax
 ```
 window:{window event}
 ```
@@ -58,27 +51,31 @@ window:{window event}
 Example
 ```
 React.createClass({
+  mixins: ['events'],
   events: {
     'window:scroll': 'onScroll'
   },
-  mixins: ['events'],
   onScroll: function() {
     // will fire when a window scroll event has been triggered and "this" is the parent component
   }
 });
 ```
 
-#### Repeat
+### repeat events
+Execute the callback every n milis
+
 Event signature
 ```
 // repeat every * interval
 repeat:{duration in millis}
+// repeat every * interval (only when the browser tab is active)
 !repeat:{duration in millis}
 ```
 
 Example
 ```
 React.createClass({
+  mixins: ['events'],
   events: {
     'repeat:3000': function() {
       // this will be called every 3 seconds only when the component is mounted
@@ -86,45 +83,68 @@ React.createClass({
     '!repeat:3000': function() {
       // same as above but will *only* be called when this web page is the active page (requestAnimationFrame)
     },
-  },
-  mixins: ['events']
+  }
 });
 ```
 
-#### "Ref" Components
+### "ref" component events
+Execute the callback when events are triggered on the components identified by the [this](http://facebook.github.io/react/docs/more-about-refs.html) value.
+
 Event signature
 ```
 ref:{ref name}:{event name}
 ```
 
-If you aren't familiar with ref usage, see [this](http://facebook.github.io/react/docs/more-about-refs.html).
-
-This assumes that the component identified by the ref name implements ***on*** and ***off*** methods.  If so, specific events from that component will be caught in the parent component.
-
 Example
 ```
 React.createClass({
+  mixins: ['events'],
   events: {
     'ref:someComponent:something-happened': 'onSomethingHappened'
   },
-  mixins: ['events'],
   onSomethingHappened: function() {
     // "someComponent" triggered the "something-happened" event and "this" is the parent component
-  }
+  },
   render: function() {
     return <div><SomeComponent ref="someComponent" .../></div>;
   }
 });
 ```
 
-#### DOM
-*note: [jquery](http://jquery.com/) (or impl that supports ```$().on(eventName, elementSelector)```) is required for these events*
+
+### "prop" object events
+Execute the callback when events are triggered on the objects identified by the property value.
+
+Event signature
+```
+prop:{ref name}:{event name}
+```
+
+Example
+```
+var MyComponent = React.createClass({
+  mixins: ['events'],
+  events: {
+    'prop:someProp:something-happened': 'onSomethingHappened'
+  },
+  onSomethingHappened: function() {
+    // "someProp" triggered the "something-happened" event and "this" is the parent component
+  }
+});
+...
+<MyComponent someProp={myObject}/>
+```
+
+### DOM events
+To avoid a a jquery dependency, this is not provided with react-events.  However, if you wish to implement DOM event
+support, copy/paste the code below
 
 Event signature
 ```
 dom:{DOM events separated by space}:{query path}
 ```
-To avoid a a jquery dependency, this has been removed however it is simple to add this to your own project.  Simply copy this code below
+
+Copy/Paste
 ```
 /**
  * Bind to DOM element events (recommended solution is to use React "on..." attributes)
@@ -144,7 +164,7 @@ React.events.handle('dom', function(options, callback) {
 });
 ```
 
-And it can be used like what is shown below
+Example
 ```
 React.createClass({
   events: {
@@ -157,6 +177,190 @@ React.createClass({
 });
 ```
 
+
+### application events
+If you want to provide declaritive event support for a custom global application event handler (that implements ```on```/```off```), you can copy/paste the code below.
+
+```
+React.events.handle('app', {
+  target: myGlobalEventHandler
+});
+```
+
+Example
+```
+  events: {
+    'app:some-event': 'onSomeEvent'
+  }
+```
+
+
+API: Mixins
+---------
+
+### events
+
+This mixin is required if you want to be able to use declaritive event definitions.
+
+In addition, it also includes component state binding for the event handler implementation (not included).
+
+The event handler implementation is included with [react-backbone](https://github.com/jhudson8/react-backbone) or can be specified  by setting ```React.events.mixin```.  The event handler is simply an object that contains method implementations for
+
+* trigger
+* on
+* off
+
+```
+React.events.mixin = myObjectThatSupportsEventMethods;
+```
+
+#### triggerWith(event[, parameters...])
+* ***event***: the event name
+* ***parameters***: any additional parameters that should be added to the trigger
+
+A convienance method which allows for easy closure binding of component event triggering when React events occur.
+
+```
+React.createClass({
+  mixins: ['triggerWith'],
+  render: function() {
+
+    // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
+    return <button type="button" onClick={this.triggerWith('button-clicked', 'param1', 'param2')}>Click me</button>
+  }
+})
+
+```
+
+
+#### trigger(eventName[, parameters...])
+* ***eventName***: the model event name to trigger
+* ***parameters***: any event parameters to be included
+
+Trigger the specified event.
+
+
+#### on(eventName, callback[, context])
+* ***eventName***: the event name
+* ***callback***: the event callback function
+* ***context***: the callback context
+
+Listen for the specific event and execute the callback function when the event is fired.
+
+
+#### once(eventName, callback[, context])
+* ***eventName***: the event name
+* ***callback***: the event callback function
+* ***context***: the callback context
+
+Listen for the specific event and execute the callback function when the event is fired ***1 time only***.
+
+
+#### off(eventName, callback[, context])
+* ***eventName***: the event name
+* ***callback***: the event callback function
+* ***context***: the callback context
+
+Remove the specified event binding.
+
+
+### listen
+
+Utility mixin to expose managed Backbone.Events binding functions which are cleaned up when the component is unmounted.
+This is similar to the "modelEventAware" mixin but is not model specific.
+
+```
+    var MyClass React.createClass({
+      mixins: ['listenTo'],
+      getInitialState: function() {
+        this.listenTo(this.props.someObject, 'change', this.onChange);
+        return null;
+      },
+      onChange: function() { ... }
+    });
+```
+
+
+#### listenTo(target, eventName, callback[, context])
+* ***target***: the source object to bind to
+* ***eventName***: the event name
+* ***callback***: the event callback function
+* ***context***: the callback context
+
+Managed event binding for ```target.on```.
+
+
+#### listenToOnce(target, eventName, callback[, context])
+* ***target***: the source object to bind to
+* ***eventName***: the event name
+* ***callback***: the event callback function
+* ***context***: the callback context
+
+Managed event binding for ```target.once```.
+
+
+#### stopListening(eventName, callback[, context])
+* ***target***: the source object to bind to
+* ***eventName***: the event name
+* ***callback***: the event callback function
+* ***context***: the callback context
+
+Unbind event handler created with ```listenTo``` or ```listenToOnce```
+
+
+API
+--------
+### React.events
+
+#### handle (identifier, options) or (identifier, handler)
+* ***identifier***: *{string or regular expression}* the event type (first part of event definition)
+* ***options***: will use a predefined "standard" handler;  this assumes the event format of "{handler identifier}:{target identifier}:{event name}"
+* ***target***: {object or function(targetIdentifier, eventName)} the target to bind/unbind from or the functions which retuns this target
+* ***onKey***: {string} the attribute which identifies the event binding function on the target (default is "on")
+* ***offKey***: {string} the attribute which identifies the event un-binding function on the target (default is "off")
+* ***handler***: {function(handlerOptions, handlerCallback)} which returns the object used as the event handler.
+* ***handlerOptions***: {object} will contain a *path* attribute - the event key (without the handler key prefix).  if the custom handler was registered as "foo" and events hash was { "foo:abc": "..." }, the path is "abc"
+* ***handlerCallback***: {function} the callback function to be bound to the event
+
+For example, the following are the implementations of the event handlers provided by default:
+
+***window events (standard event handler type with custom on/off methods and static target)***
+```
+React.events.handle('window', {
+  target: window,
+  onKey: 'addEventListener',
+  offKey: 'removeEventListener'
+});
+```
+
+```
+// this will match any key that starts with custom-
+React.events.handle(/custom-.*/, function(options, callback) {
+  // if the event declaration was "custom-foo:bar"
+  var key = options.key;  // customm-foo
+  var path = options.path; // bar
+  ...
+}
+```
+
+***DOM events (custom handler which must return an object with on/off methods)***
+```
+  React.events.handle('dom', function(options, callback) {
+    var parts = options.path.match(splitter);
+    return {
+      on: function() {
+        $(this.getDOMNode()).on(parts[1], parts[2], callback);
+      },
+      off: function() {
+        $(this.getDOMNode()).off(parts[1], parts[2], callback);
+      }
+    };
+  });
+```
+
+
+Sections
+----------------
 
 ### React Component Events
 
@@ -255,136 +459,3 @@ Which can be referenced with
 #### Custom Event Handlers
 
 All events supported by default use the same API as the custom event handler.  Using ```React.events.handle```, you can add support for a custom event handler.  This could be useful for adding an application specific global event bus for example.
-
-
-API: Mixins
----------
-
-### events
-
-This mixin is required if you want to be able to use declaritive event definitions.
-
-In addition, it also includes component state binding for the event handler implementation (not included).
-
-The event handler implementation is included with [react-backbone](https://github.com/jhudson8/react-backbone) or can be specified  by setting ```React.events.mixin```.  The event handler is simply an object that contains method implementations for
-
-* trigger
-* on
-* off
-
-```
-React.events.mixin = myObjectThatSupportsEventMethods;
-```
-
-#### triggerWith(event[, parameters...])
-* ***event***: the event name
-* ***parameters***: any additional parameters that should be added to the trigger
-
-A convienance method which allows for easy closure binding of component event triggering when React events occur.
-
-```
-React.createClass({
-  mixins: ['triggerWith'],
-  render: function() {
-
-    // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
-    return <button type="button" onClick={this.triggerWith('button-clicked', 'param1', 'param2')}>Click me</button>
-  }
-})
-
-```
-
-
-#### trigger(eventName[, parameters...])
-* ***eventName***: the model event name to trigger
-* ***parameters***: any event parameters to be included
-
-Trigger the specified event.
-
-
-#### on(eventName, callback[, context])
-* ***eventName***: the event name
-* ***callback***: the event callback function
-* ***context***: the callback context
-
-Listen for the specific event and execute the callback function when the event is fired.
-
-
-#### once(eventName, callback[, context])
-* ***eventName***: the event name
-* ***callback***: the event callback function
-* ***context***: the callback context
-
-Listen for the specific event and execute the callback function when the event is fired ***1 time only***.
-
-
-#### off(eventName, callback[, context])
-* ***eventName***: the event name
-* ***callback***: the event callback function
-* ***context***: the callback context
-
-Remove the specified event binding.
-
-
-API
---------
-### React.events
-
-#### handle (identifier, options); (identifier, handler)
-* ***identifier***: *{string or regular expression}* the event type (first part of event definition)
-* ***options***: will use a predefined "standard" handler;  this assumes the event format of "{handler identifier}:{target identifier}:{event name}"
-* ***target***: {object or function(targetIdentifier, eventName)} the target to bind/unbind from or the functions which retuns this target
-* ***onKey***: {string} the attribute which identifies the event binding function on the target (default is "on")
-* ***offKey***: {string} the attribute which identifies the event un-binding function on the target (default is "off")
-* ***handler***: {function(handlerOptions, handlerCallback)} which returns the object used as the event handler.
-* ***handlerOptions***: {object} will contain a *path* attribute - the event key (without the handler key prefix).  if the custom handler was registered as "foo" and events hash was { "foo:abc": "..." }, the path is "abc"
-* ***handlerCallback***: {function} the callback function to be bound to the event
-
-For example, the following are the implementations of the event handlers provided by default:
-
-***window events (standard event handler type with custom on/off methods and static target)***
-```
-React.events.handle('window', {
-  target: window,
-  onKey: 'addEventListener',
-  offKey: 'removeEventListener'
-});
-```
-
-```
-// this will match any key that starts with custom-
-React.events.handle(/custom-.*/, function(options, callback) {
-  // if the event declaration was "custom-foo:bar"
-  var key = options.key;  // customm-foo
-  var path = options.path; // bar
-  ...
-}
-```
-
-***DOM events (custom handler which must return an object with on/off methods)***
-```
-  React.events.handle('dom', function(options, callback) {
-    var parts = options.path.match(splitter);
-    return {
-      on: function() {
-        $(this.getDOMNode()).on(parts[1], parts[2], callback);
-      },
-      off: function() {
-        $(this.getDOMNode()).off(parts[1], parts[2], callback);
-      }
-    };
-  });
-```
-
-You could add your own global event bus handler (assuming it supported on/off events) like the following example:
-```
-React.events.handle('app', {
-  target: myGlobalEventHandler
-});
-```
-which could then be bound by your React components using
-```
-  events: {
-    'app:some-event': 'onSomeEvent'
-  }
-```
