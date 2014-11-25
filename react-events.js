@@ -46,9 +46,97 @@
     patternHandlers = [],
     splitter = /^([^:]+):?(.*)/,
     specialWrapper = /^\*([^\(]+)\(([^)]*)\):(.*)/,
-    noArgMethods = ['forceUpdate'];
+    noArgMethods = ['forceUpdate'],
+    setState = React.mixins.setState,
+    getState = React.mixins.getState;
 
-  // wrapper for event implementations - includes on/off methods
+  /**
+   * Internal model event binding handler
+   * (type(on|once|off), {event, callback, context, target})
+   */
+  function manageEvent(type, data) {
+    var eventsParent = this;
+    var _data = {
+      type: type
+    };
+    for (var name in data) {
+      _data[name] = data[name];
+    }
+    var watchedEvents = React.mixins.getState('__watchedEvents', this);
+    if (!watchedEvents) {
+      watchedEvents = [];
+      setState({
+        __watchedEvents: watchedEvents
+      }, this);
+    }
+    _data.context = _data.context || this;
+    watchedEvents.push(_data);
+
+    // bind now if we are already mounted (as the mount function won't be called)
+    var target = getTarget(_data.target, this);
+    if (this.isMounted()) {
+      if (target) {
+        target[_data.type](_data.event, _data.callback, _data.context);
+      }
+    }
+    if (type === 'off') {
+      var watchedEvent;
+      for (var i=0; i<watchedEvents.length; i++) {
+        watchedEvent = watchedEvents[i];
+        if (watchedEvent.event === data.event &&
+          watchedEvent.callback === data.callback &&
+          getTarget(watchedEvent.target, this) === target) {
+          watchedEvents.splice(i, 1);
+        }
+      }
+    }
+  }
+
+  // bind all registered events to the model
+  function _watchedEventsBindAll(context) {
+    var watchedEvents = getState('__watchedEvents', context);
+    if (watchedEvents) {
+      var data;
+      for (var name in watchedEvents) {
+        data = watchedEvents[name];
+        var target = getTarget(data.target, context);
+        if (target) {
+          target[data.type](data.event, data.callback, data.context);
+        }
+      }
+    }
+  }
+
+  // unbind all registered events from the model
+  function _watchedEventsUnbindAll(keepRegisteredEvents, context) {
+    var watchedEvents = getState('__watchedEvents', context);
+    if (watchedEvents) {
+      var data;
+      for (var name in watchedEvents) {
+        data = watchedEvents[name];
+        var target = getTarget(data.target, context);
+        if (target) {
+          target.off(data.event, data.callback, data.context);
+        }
+      }
+      if (!keepRegisteredEvents) {
+        setState({
+          __watchedEvents: []
+        }, context);
+      }
+    }
+  }
+
+  function getTarget(target, context) {
+    if (typeof target === 'function') {
+      return target.call(context);
+    }
+    return target;
+  }
+
+  /*
+   * wrapper for event implementations - includes on/off methods
+   */
   function createHandler(event, callback, context, dontWrapCallback) {
     if (!dontWrapCallback) {
       var _callback = callback,
@@ -276,7 +364,6 @@
       }
     };
   });
-
 
   /**
    * Like setInterval events *but* will only fire when the user is actively viewing the web page
