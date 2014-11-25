@@ -302,7 +302,8 @@
       },
 
       getInitialState: function() {
-        var handlers = this._eventHandlers = [];
+        var handlers = [];
+        setState({_eventHandlers: handlers}, this);
         if (this.events) {
           var handler;
           for (var event in this.events) {
@@ -317,7 +318,7 @@
       },
 
       componentDidUpdate: function() {
-        var handlers = this._eventHandlers,
+        var handlers = getState('_eventHandlers', this),
           handler;
         for (var i = 0; i < handlers.length; i++) {
           handler = handlers[i];
@@ -329,14 +330,14 @@
       },
 
       componentDidMount: function() {
-        var handlers = this._eventHandlers;
+        var handlers = getState('_eventHandlers', this);
         for (var i = 0; i < handlers.length; i++) {
           handlers[i].on.call(this);
         }
       },
 
       componentWillUnmount: function() {
-        var handlers = this._eventHandlers;
+        var handlers = getState('_eventHandlers', this);
         for (var i = 0; i < handlers.length; i++) {
           handlers[i].off.call(this);
         }
