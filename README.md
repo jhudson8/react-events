@@ -24,6 +24,7 @@ Installation
 --------------
 Browser:
 ```
+<script src=".../react[-min].js"></script>
 <script src=".../react-mixin-manager[-min].js"></script>
 <script src=".../react-events[-min].js"></script>
 ```
