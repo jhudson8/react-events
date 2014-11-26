@@ -18,11 +18,10 @@ By default, the following events are supported out of the box but custom event h
 
 Dependencies
 --------------
-* [React](http://facebook.github.io/react/)
 * [react-mixin-manager](https://github.com/jhudson8/react-mixin-manager)
 
 Installation
--------------
+--------------
 * Browser: include *react-events[.min].js* after the listed dependencies
 * CommonJS: ```require('react-events')(require('react');``` (after incliding [react-mixin-manager](https://github.com/jhudson8/react-mixin-manager))
 
