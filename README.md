@@ -3,7 +3,7 @@ react-events
 
 Declarative managed event bindings for [React](http://facebook.github.io/react/) components
 
-[view the fancydocs](http://jhudson8.github.io/fancydocs/index.html#project/jhudson8/react-events) for a better docs experience
+[View the fancydocs](http://jhudson8.github.io/fancydocs/index.html#project/jhudson8/react-events) for a better docs experience
 
 * No manual event cleanup
 * All events are declared in 1 place for easier readability
@@ -87,7 +87,7 @@ React.createClass({
 });
 ```
 
-### "ref" component events
+### component by ref events
 Execute the callback when events are triggered on the components identified by the [this](http://facebook.github.io/react/docs/more-about-refs.html) value.
 
 Event signature
@@ -112,7 +112,7 @@ React.createClass({
 ```
 
 
-### "prop" object events
+### object by prop key events
 Execute the callback when events are triggered on the objects identified by the property value.
 
 Event signature
