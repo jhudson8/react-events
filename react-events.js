@@ -25,15 +25,17 @@
  */
 (function(main) {
   if (typeof define === 'function' && define.amd) {
-    // $ is intended to not be provided with define right now.
-    // $ is only used for the DOM event handler and I do not want to
-    // enforce the jquery requirement simply for the user of that handler.
-    // $ must be defined globally if using the DOM handler
-    define(['react'], function(React) {
-      main(React);
+    define([], function() {
+      // with AMD
+      //  require(
+      //    ['react', react-events'], function(React, reactEvents) {
+      //    reactEvents(React); 
+      //  });
+      return main;
     });
   } else if (typeof exports !== 'undefined' && typeof require !== 'undefined') {
-    // $ is only required if using the DOM events
+    // with CommonJS
+    // require('react-events')(require('react'));
     module.exports = function(React) {
       main(React);
     };

@@ -22,8 +22,22 @@ Dependencies
 
 Installation
 --------------
-* Browser: include *react-events[.min].js* after the listed dependencies
-* CommonJS: ```require('react-events')(require('react');``` (after incliding [react-mixin-manager](https://github.com/jhudson8/react-mixin-manager))
+Browser:
+```
+<script src=".../react-mixin-manager[-min].js"></script>
+<script src=".../react-events[-min].js"></script>
+```
+CommonJS
+```
+require('react-events')(require('react'));
+```
+AMD
+```
+require(
+  ['react', react-events'], function(React, reactEvents) {
+  reactEvents(React); 
+});
+```
 
 
 API: Event Binding Definitions
