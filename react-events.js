@@ -28,7 +28,7 @@
     define([], function() {
       // with AMD
       //  require(
-      //    ['react', react-events'], function(React, reactEvents) {
+      //    ['react', 'react-events'], function(React, reactEvents) {
       //    reactEvents(React); 
       //  });
       return main;
@@ -36,9 +36,7 @@
   } else if (typeof exports !== 'undefined' && typeof require !== 'undefined') {
     // with CommonJS
     // require('react-events')(require('react'));
-    module.exports = function(React) {
-      main(React);
-    };
+    module.exports = main;
   } else {
     main(React);
   }
