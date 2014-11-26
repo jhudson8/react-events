@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.6.0...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.0...master)
+
+## v0.7.0 - November 25th, 2014
+- add "prop" declarative event - 8a8bb53
+- add "listen" mixin - 44d737c
+- bug fix: ensure bound handlers are saved within state - 312d8ce
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.6.0...v0.7.0)
 
 ## v0.6.0 - November 14th, 2014
 - remove DOM event handler - cd6489f
