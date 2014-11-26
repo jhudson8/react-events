@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.8.0...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v1.0.0...master)
+
+## v1.0.0 - November 26th, 2014
+- Update release notes - 78bc88e
+
+Compatibility notes:
+- TODO : What might have broken?
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.8.0...v1.0.0)
 
 ## v0.8.0 - November 26th, 2014
 
