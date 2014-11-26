@@ -2,14 +2,7 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.8.0...master)
-
-## v0.8.0 - November 26th, 2014
-
-Compatibility notes:
-- TODO : What might have broken?
-
-[Commits](https://github.com/jhudson8/react-events/compare/v0.7.1...v0.8.0)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.1...master)
 
 ## v0.7.1 - November 26th, 2014
 - for AMD, you must execute the function with params (see README AMD install instructions) - ecb83cc
