@@ -391,8 +391,21 @@ describe('events defined as a hierarchy', function() {
         test4: sinon.spy()
       }, ['events']);
       obj.mount();
+
       model1.trigger('test1', 'a');
       expect(obj.test1.callCount).to.eql(1);
       expect(obj.test1.calledWith('a')).to.eql(true);
+
+      model1.trigger('test2', 'b');
+      expect(obj.test2.callCount).to.eql(1);
+      expect(obj.test2.calledWith('b')).to.eql(true);
+
+      model1.trigger('test3', 'c');
+      expect(obj.test3.callCount).to.eql(1);
+      expect(obj.test3.calledWith('c')).to.eql(true);
+
+      model2.trigger('test4', 'd');
+      expect(obj.test4.callCount).to.eql(1);
+      expect(obj.test4.calledWith('d')).to.eql(true);
   });
 });
