@@ -51,6 +51,40 @@
     getState = React.mixins.getState;
 
   /**
+   *  Allow events to be referenced in a hierarchical structure.  All parts in the
+   * hierarchy will be appended together using ":" as the separator
+   * window: {
+   *   scroll: 'onScroll',
+   *   resize: 'onResize'
+   * }
+   * will return as
+   * {
+   *   'window:scroll': 'onScroll',
+   *   'window:resize': 'onResize'
+   * }
+   }
+   */
+  function normalizeEvents(events, rtn, prefix) {
+    rtn = rtn || {};
+    if (prefix) {
+      prefix += ':';
+    } else {
+      prefix = '';
+    }
+    var value, valueType;
+    for (var key in events) {
+      value = events[key];
+      valueType = typeof value;
+      if (valueType === 'string' || valueType === 'function') {
+        rtn[prefix + key] = value;
+      } else if (value) {
+        normalizeEvents(value, rtn, prefix + key);
+      }
+    }
+    return rtn;
+  }
+
+  /**
    * Internal model event binding handler
    * (type(on|once|off), {event, callback, context, target})
    */
@@ -411,18 +445,18 @@
 
       getInitialState: function() {
         var handlers = [];
-        setState({_eventHandlers: handlers}, this);
         if (this.events) {
+          var events = normalizeEvents(this.events);
           var handler;
-          for (var event in this.events) {
-            handler = createHandler(event, this.events[event], this);
+          for (var ev in events) {
+            handler = createHandler(ev, events[ev], this);
             if (handler.initialize) {
               handler.initialize.call(this);
             }
             handlers.push(handler);
           }
         }
-        return null;
+        return {_eventHandlers: handlers};
       },
 
       componentDidUpdate: function() {

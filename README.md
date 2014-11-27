@@ -8,13 +8,7 @@ Declarative managed event bindings for [React](http://facebook.github.io/react/)
 * No manual event cleanup
 * All events are declared in 1 place for easier readability
 * Provided ```listenTo``` API
-
-By default, the following events are supported out of the box but custom event handlers can be included.
-
-* window events
-* ```ref``` events (using ```on``` and ```off``` of a component identified with a particular [ref](http://facebook.github.io/react/docs/more-about-refs.html))
-* ```props``` events (using ```on``` and ```off``` of a object identified with a particular property name
-* repeat events
+* Pluggable event definitions with many supported types out of the box (refs, props, window, repeat)
 
 Dependencies
 --------------
@@ -30,12 +24,15 @@ Browser:
 ```
 CommonJS
 ```
-require('react-events')(require('react'));
+var React = require('react');
+require('react-mixin-manager')(React);
+require('react-events')(React);
 ```
 AMD
 ```
 require(
-  ['react', react-events'], function(React, reactEvents) {
+  ['react', 'react-mixin-manager', 'react-events'], function(React, reactMixinManager, reactEvents) {
+  reactMixinManager(React); 
   reactEvents(React); 
 });
 ```
@@ -285,7 +282,7 @@ This is similar to the "modelEventAware" mixin but is not model specific.
 
 ```
     var MyClass React.createClass({
-      mixins: ['listenTo'],
+      mixins: ['listen'],
       getInitialState: function() {
         this.listenTo(this.props.someObject, 'change', this.onChange);
         return null;
@@ -412,6 +409,32 @@ var ParentComponent = React.createClass({
 ```
 
 ### Advanced Features
+
+#### Declaritive event tree
+
+The event bindings can be declared as a tree structure.  Each element in the tree will be appended
+to the parent element using the ```:``` separator.  For example
+```
+events: {
+  prop: {
+    'foo:test1': 'test1',
+    foo: {
+      test2: 'test2',
+      test3: 'test3'
+    }
+  },
+  'prop:bar:test4': 'test4'
+}
+```
+will be converted to
+```
+events: {
+  'prop:foo:test1': 'test1',
+  'prop:foo:test2': 'test2',
+  'prop:foo:test3': 'test3',
+  'prop:bar:test4': 'test4'
+}
+```
 
 #### Instance References
 

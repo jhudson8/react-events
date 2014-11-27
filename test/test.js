@@ -365,3 +365,34 @@ describe('listen', function() {
     expect(spy.callCount).to.eql(1);
   });
 });
+
+describe('events defined as a hierarchy', function() {
+  it('should create event handlers for allevents defined as a hierarchy', function() {
+    var model1 = new Backbone.Model(),
+      model2 = new Backbone.Model(),
+      obj = newComponent({
+        props: {
+          foo: model1,
+          bar: model2
+        },
+        events: {
+          prop: {
+            'foo:test1': 'test1',
+            foo: {
+              test2: 'test2',
+              test3: 'test3'
+            }
+          },
+          'prop:bar:test4': 'test4'
+        },
+        test1: sinon.spy(),
+        test2: sinon.spy(),
+        test3: sinon.spy(),
+        test4: sinon.spy()
+      }, ['events']);
+      obj.mount();
+      model1.trigger('test1', 'a');
+      expect(obj.test1.callCount).to.eql(1);
+      expect(obj.test1.calledWith('a')).to.eql(true);
+  });
+});
