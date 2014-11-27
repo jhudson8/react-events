@@ -2,7 +2,35 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.7.1...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.2...master)
+
+## v0.7.2 - November 26th, 2014
+- support event bindings declared as a tree structure - 47b5628
+For example
+```
+events: {
+  prop: {
+    'foo:test1': 'test1',
+    foo: {
+      test2: 'test2',
+      test3: 'test3'
+    }
+  },
+  'prop:bar:test4': 'test4'
+}
+```
+will be converted to
+```
+events: {
+  'prop:foo:test1': 'test1',
+  'prop:foo:test2': 'test2',
+  'prop:foo:test3': 'test3',
+  'prop:bar:test4': 'test4'
+}
+```
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.1...v0.7.2)
 
 ## v0.7.1 - November 26th, 2014
 - for AMD, you must execute the function with params (see README AMD install instructions) - ecb83cc
