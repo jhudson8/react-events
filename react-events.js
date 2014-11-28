@@ -45,7 +45,7 @@
   var handlers = {},
     patternHandlers = [],
     splitter = /^([^:]+):?(.*)/,
-    specialWrapper = /^\*([^\(]+)\(([^)]*)\):(.*)/,
+    specialWrapper = /^\*([^\(]+)\(([^)]*)\)[->:]*(.*)/,
     noArgMethods = ['forceUpdate'],
     setState = React.mixins.setState,
     getState = React.mixins.getState;

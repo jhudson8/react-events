@@ -433,7 +433,7 @@ describe('special callback wrappers', function() {
           foo: model1
         },
         events: {
-          '*test():prop:foo:test': eventSpy
+          '*test()prop:foo:test': eventSpy
         }
       }, ['events']);
     obj.mount();
@@ -453,7 +453,43 @@ describe('special callback wrappers', function() {
           foo: model1
         },
         events: {
+          '*test("specialParam", 1, true)prop:foo:test': eventSpy
+        }
+      }, ['events']);
+    obj.mount();
+
+    model1.trigger('test', 'eventParam');
+    expect(eventSpy.callCount).to.eql(1);
+    expect(eventSpy.calledWith('specialParam', 1, true, 'eventParam')).to.eql(true);
+  });
+
+  it('should support order format (additional ":" separator)', function() {
+    var eventSpy = sinon.spy();
+    var model1 = new Backbone.Model(),
+      obj = newComponent({
+        props: {
+          foo: model1
+        },
+        events: {
           '*test("specialParam", 1, true):prop:foo:test': eventSpy
+        }
+      }, ['events']);
+    obj.mount();
+
+    model1.trigger('test', 'eventParam');
+    expect(eventSpy.callCount).to.eql(1);
+    expect(eventSpy.calledWith('specialParam', 1, true, 'eventParam')).to.eql(true);
+  });
+
+  it('should support pointer format (additional "->" separator)', function() {
+    var eventSpy = sinon.spy();
+    var model1 = new Backbone.Model(),
+      obj = newComponent({
+        props: {
+          foo: model1
+        },
+        events: {
+          '*test("specialParam", 1, true)->prop:foo:test': eventSpy
         }
       }, ['events']);
     obj.mount();

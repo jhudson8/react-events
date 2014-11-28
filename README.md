@@ -426,13 +426,37 @@ var MyClass = React.createClass({
 
 #### Callback Wrappers
 
-It is sometimes useful to wrap callback methods for throttling, cacheing or other purposes.  Because an instance is required for this, the previously described instance reference ```callback``` can be used but can be verbose.  Special callback wrappers can be used to accomplish this.  If the event name is prefixed with ```*someSpecialName(args):...``` the ```someSpecialName``` callback wrapper will be invoked.
+It is sometimes useful to wrap callback methods for throttling, cacheing or other purposes.  Because an instance is required for this, the previously described instance reference ```callback``` can be used but can be verbose.  Special callback wrappers can be used to accomplish this.  If the event name is prefixed with ```*someSpecialName(args)->...``` the ```someSpecialName``` callback wrapper will be invoked.
 
 This is best described with an example
 ```
   events: {
-    '*throttle(300):window:resize': 'forceUpdate'
+    '*throttle(300)->window:resize': 'forceUpdate'
   }
+```
+
+To implement your own special handler, just reference a wrapper function by name on ```React.events.specials```.  For example:
+```
+// callback is the runtime event callback and args are the special definition arguments
+React.events.specials.throttle = function(callback, args) {
+  // the arguments provided here are the runtime event arguments
+  return function() {
+    var throttled = this.throttled || _.throttle(callback, args[0]);
+    throttled.apply(this, arguments);
+  }
+}
+```
+
+If the runtime event was triggered triggered with arguments ("foo"), the actual parameters would look like this
+```
+React.events.specials.throttle = function(callback, [3000]) {
+  // the arguments provided here are the runtime event arguments
+  return function("foo") {
+    // "this" will be an object unique to this special definition and remain consistent through multiple callbacks
+    var throttled = this.throttled || _.throttle(callback, 3000);
+    throttled.apply(this, arguments);
+  }
+}
 ```
 
 While no special handlers are implemented by default, by including [react-backbone](https://github.com/jhudson8/react-backbone), the following special handlers are available (see [underscore](http://underscorejs.org) for more details)
@@ -443,35 +467,6 @@ While no special handlers are implemented by default, by including [react-backbo
 * throttle
 * debounce
 * once
-
-To implement your own special handler, just reference a wrapper function by name on ```React.events.specials```.  For example:
-```
-// this will log a message whenever this callback is invoked
-                                  // callback is the runtime event callback and args are the special definition arguments
-React.events.specials.log = function(callback, args) {
-  // the arguments provided here are the runtime event arguments
-  return function() {
-    console.log(args[0]);
-    callback.apply(this, args);
-  }
-}
-```
-Which can be defined as follows
-```
-  events: {
-    '*log("special arguments", 4, true):...': '...';
-  }
-```
-If the runtime event was triggered triggered with arguments ("foo"), the impl would be as follows
-```
-React.events.specials.log = function(callback, ["special arguments", 4, true]) {
-  // the arguments provided here are the runtime event arguments
-  return function("foo") {
-    // "this" will remain consistent through multiple callbacks
-    callback.apply(this, arguments);
-  }
-}
-```
 
 
 #### Custom Event Handlers
