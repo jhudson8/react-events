@@ -244,37 +244,6 @@ React.createClass({
 ```
 
 
-#### trigger(eventName[, parameters...])
-* ***eventName***: the model event name to trigger
-* ***parameters***: any event parameters to be included
-
-Trigger the specified event.
-
-
-#### on(eventName, callback[, context])
-* ***eventName***: the event name
-* ***callback***: the event callback function
-* ***context***: the callback context
-
-Listen for the specific event and execute the callback function when the event is fired.
-
-
-#### once(eventName, callback[, context])
-* ***eventName***: the event name
-* ***callback***: the event callback function
-* ***context***: the callback context
-
-Listen for the specific event and execute the callback function when the event is fired ***1 time only***.
-
-
-#### off(eventName, callback[, context])
-* ***eventName***: the event name
-* ***callback***: the event callback function
-* ***context***: the callback context
-
-Remove the specified event binding.
-
-
 ### listen
 
 Utility mixin to expose managed Backbone.Events binding functions which are cleaned up when the component is unmounted.
