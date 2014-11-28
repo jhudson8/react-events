@@ -1,6 +1,6 @@
 {
   "name": "react-events",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "author": "Joe Hudson <joehud@gmail.com>",
   "description": "Declarative managed event bindings for React components",
   "repository": {
