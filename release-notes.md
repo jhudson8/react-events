@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.7.2...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.3...master)
+
+## v0.7.3 - November 28th, 2014
+- allow non-string special arguments - 39a920c
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.2...v0.7.3)
 
 ## v0.7.2 - November 26th, 2014
 - support event bindings declared as a tree structure - 47b5628
