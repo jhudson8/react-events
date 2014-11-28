@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.7.3...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.4...master)
+
+## v0.7.4 - November 28th, 2014
+- add more visible -> as the special separator "specialName(...)->..." - 545f9a3
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.3...v0.7.4)
 
 ## v0.7.3 - November 28th, 2014
 - allow non-string special arguments - 39a920c
