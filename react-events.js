@@ -195,7 +195,7 @@
     var match = event.match(specialWrapper);
     if (match) {
       var specialMethodName = match[1],
-        args = match[2].split(/\s*,\s*/),
+        args = eval('[' + match[2] + ']'),
         rest = match[3],
         specialHandler = React.events.specials[specialMethodName];
       if (specialHandler) {
@@ -221,7 +221,7 @@
       }
     }
     if (!handler) {
-      throw 'no handler registered for "' + event + '"';
+      throw new Error('no handler registered for "' + event + '"');
     }
 
     return handler.call(context, {

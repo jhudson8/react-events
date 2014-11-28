@@ -447,18 +447,30 @@ While no special handlers are implemented by default, by including [react-backbo
 To implement your own special handler, just reference a wrapper function by name on ```React.events.specials```.  For example:
 ```
 // this will log a message whenever this callback is invoked
+                                  // callback is the runtime event callback and args are the special definition arguments
 React.events.specials.log = function(callback, args) {
+  // the arguments provided here are the runtime event arguments
   return function() {
     console.log(args[0]);
-    callback.apply(this, arguments);
+    callback.apply(this, args);
   }
 }
 ```
-Which can be referenced with
+Which can be defined as follows
 ```
   events: {
-    '*log(my message):...': '...';
+    '*log("special arguments", 4, true):...': '...';
   }
+```
+If the runtime event was triggered triggered with arguments ("foo"), the impl would be as follows
+```
+React.events.specials.log = function(callback, ["special arguments", 4, true]) {
+  // the arguments provided here are the runtime event arguments
+  return function("foo") {
+    // "this" will remain consistent through multiple callbacks
+    callback.apply(this, arguments);
+  }
+}
 ```
 
 

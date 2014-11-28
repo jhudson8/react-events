@@ -409,3 +409,57 @@ describe('events defined as a hierarchy', function() {
       expect(obj.test4.calledWith('d')).to.eql(true);
   });
 });
+
+describe('special callback wrappers', function() {
+  // the special definition arguments
+  var spy = sinon.spy(function(callback, args) {
+    // the event call arguments
+    return function(param1) {
+      var _args = Array.prototype.slice.call(args, 0);
+      _args.push(param1);
+      callback.apply(this, _args);
+    }
+  });
+  React.events.specials.test = spy;
+  beforeEach(function() {
+    spy.reset();
+  });
+
+  it('should use the special with 0 params (and still proxy the event params)', function() {
+    var eventSpy = sinon.spy();
+    var model1 = new Backbone.Model(),
+      obj = newComponent({
+        props: {
+          foo: model1
+        },
+        events: {
+          '*test():prop:foo:test': eventSpy
+        }
+      }, ['events']);
+    obj.mount();
+
+    model1.trigger('test', 'eventParam');
+    expect(spy.callCount).to.eql(1);
+    expect(spy.getCall(0).args[1]).to.eql([]);
+    expect(eventSpy.callCount).to.eql(1);
+    expect(eventSpy.calledWith('eventParam')).to.eql(true);
+  });
+
+  it('should use the special with multiple params or different types', function() {
+    var eventSpy = sinon.spy();
+    var model1 = new Backbone.Model(),
+      obj = newComponent({
+        props: {
+          foo: model1
+        },
+        events: {
+          '*test("specialParam", 1, true):prop:foo:test': eventSpy
+        }
+      }, ['events']);
+    obj.mount();
+
+    model1.trigger('test', 'eventParam');
+    expect(eventSpy.callCount).to.eql(1);
+    expect(eventSpy.calledWith('specialParam', 1, true, 'eventParam')).to.eql(true);
+  });
+});
