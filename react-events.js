@@ -491,11 +491,17 @@
         func.apply(context, arguments);
       };
     }
-    if (eventManager.mixin) {
+    var eventHandler = eventManager.mixin;
+    if (eventHandler) {
       var eventHandlerMixin = {},
-        state = {};
-      for (var name in eventManager.mixin) {
-        eventHandlerMixin[name] = bind(eventManager.mixin[name], state);
+        state = {},
+        key;
+      var keys = ['on', 'off', 'trigger'];
+      for (var i=0; i<keys.length; i++) {
+        var key = keys[i];
+        if (eventHandler[key]) {
+          eventHandlerMixin[key] = bind(eventHandler[key], state);
+        }
       }
       eventHandlerMixin.getInitialState = function() {
         return {
