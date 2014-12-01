@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.7.4...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.5...master)
+
+## v0.7.5 - December 1st, 2014
+- bug fix: only include on/off/trigger from event handler impl - 8a17425
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.4...v0.7.5)
 
 ## v0.7.4 - November 28th, 2014
 - add more visible -> as the special separator "specialName(...)->..." - 545f9a3
