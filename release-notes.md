@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.7.5...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.6...master)
+
+## v0.7.6 - December 2nd, 2014
+- include "once" for React.events.mixin functions to be applied within the "events" mixin - 8c05d16
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.5...v0.7.6)
 
 ## v0.7.5 - December 1st, 2014
 - bug fix: only include on/off/trigger from event handler impl - 8a17425
