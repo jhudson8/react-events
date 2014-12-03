@@ -496,7 +496,7 @@
       var eventHandlerMixin = {},
         state = {},
         key;
-      var keys = ['on', 'off', 'trigger'];
+      var keys = ['on', 'once', 'off', 'trigger'];
       for (var i=0; i<keys.length; i++) {
         var key = keys[i];
         if (eventHandler[key]) {
