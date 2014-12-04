@@ -439,7 +439,18 @@
         var args = Array.prototype.slice.call(arguments),
           self = this;
         return function() {
-          self.trigger.apply(this, args);
+          self.trigger.apply(self, args);
+        };
+      },
+
+      /**
+       * Return a callback fundtion that will call the provided function with the provided arguments
+       */
+      callWith: function(callback) {
+        var args = Array.prototype.slice.call(arguments, 1),
+          self = this;
+        return function() {
+          callback.apply(self, args);
         };
       },
 

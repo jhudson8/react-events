@@ -77,6 +77,29 @@ function newComponent(attributes, mixins) {
 }
 
 
+describe('#triggerWith', function() {
+  it('should work', function() {
+    var obj = newComponent({});
+    obj.mount();
+    sinon.stub(obj, 'trigger');
+    var callback = obj.triggerWith('foo', 'bar');
+    callback();
+    expect(obj.trigger.calledWith('foo', 'bar')).to.eql(true);
+  })
+});
+
+
+describe('#callWith', function() {
+  it('should work', function() {
+    var obj = newComponent({});
+    obj.mount();
+    var spy = sinon.spy();
+    var callback = obj.callWith(spy, 'foo');
+    callback();
+    expect(spy.calledWith('foo')).to.eql(true);
+  })
+});
+
 describe('window events', function() {
 
   it('should on and off window events', function() {

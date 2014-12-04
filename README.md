@@ -240,7 +240,26 @@ React.createClass({
     return <button type="button" onClick={this.triggerWith('button-clicked', 'param1', 'param2')}>Click me</button>
   }
 })
+```
 
+
+#### callWith(func[, parameters...])
+* ***func***: the event name
+* ***parameters***: any additional parameters that should be used as arguments to the provided callback function
+
+A convienance method which allows for easy closure binding of a callback function with arguments
+
+```
+React.createClass({
+  mixins: ['triggerWith'],
+  render: function() {
+
+    // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
+    for (var i=0; i<something.length; i++) {
+      return <button type="button" onClick={this.callWith(onSomething, something[i])}>Click me</button>
+    }
+  }
+})
 ```
 
 
