@@ -42,6 +42,7 @@
   }
 })(function(React) {
 
+  // react-backbone:with-deps start
   var handlers = {},
     patternHandlers = [],
     splitter = /^([^:]+):?(.*)/,
@@ -570,5 +571,6 @@
       manageEvent.call(this, 'off', data);
     }
   });
+  // react-backbone:with-deps end
 
 });
