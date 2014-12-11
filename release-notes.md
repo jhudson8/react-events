@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.7.7...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.8...master)
+
+## v0.7.8 - December 10th, 2014
+no functional code changes.  There is just an additional comment that is used to create react-backbone/with-deps.js
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.7...v0.7.8)
 
 ## v0.7.7 - December 4th, 2014
 - [#2](https://github.com/jhudson8/react-events/issues/2) - Interaction Nirvana
