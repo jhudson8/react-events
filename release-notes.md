@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.7.8...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.9...master)
+
+## v0.7.9 - December 11th, 2014
+- code cleanup - ccd0527
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.8...v0.7.9)
 
 ## v0.7.8 - December 10th, 2014
 no functional code changes.  There is just an additional comment that is used to create react-backbone/with-deps.js
