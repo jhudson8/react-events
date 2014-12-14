@@ -3,7 +3,7 @@ react-events
 Declarative managed event bindings for [React](http://facebook.github.io/react/) components
 
 * No manual event cleanup
-* All events are declared in 1 place for easier readability
+* All events are declared in a single place for easier readability
 * Provided ```listenTo``` API
 * Pluggable event definitions with many supported types out of the box (refs, props, window, repeat)
 
