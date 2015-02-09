@@ -1,5 +1,5 @@
 /*!
- * react-events v0.7.9
+ * react-events v0.8.0
  * https://github.com/jhudson8/react-events
  *
  *

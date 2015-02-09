@@ -278,6 +278,8 @@ This method can be used to the same functionality that a React component can use
 
 ```
 var MyMixin = {
+  mixins: ['events'],
+  
   getInitialState: function() {
 
     this.manageEvents({
