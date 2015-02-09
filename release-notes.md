@@ -2,7 +2,32 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.7.9...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.8.0...master)
+
+## v0.8.0 - February 9th, 2015
+- add the manageEvents function to the "events" mixin - e8860f1
+
+This method can be used to the same functionality that a React component can use with the ```events``` hash.  This allows mixins to use all of the managed behavior and event callbacks provided with this project.
+
+```
+var MyMixin = {
+  mixins: ['events'],
+
+  getInitialState: function() {
+
+    this.manageEvents({
+      '*throttle(300)->window:resize': function() {
+        // this will be called (throttled) whenever the window resizes
+      }
+    });
+
+    return null;
+  }
+}
+```
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.7.9...v0.8.0)
 
 ## v0.7.9 - December 11th, 2014
 - code cleanup - ccd0527
