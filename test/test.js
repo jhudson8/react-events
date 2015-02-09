@@ -25,7 +25,6 @@ require('react-mixin-manager')(React);
 require('../react-events')(React, $);
 
 function newComponent(attributes, mixins) {
-
   mixins = mixins ? React.mixins.get(mixins) : React.mixins.get('events');
 
   var obj = {
@@ -520,5 +519,31 @@ describe('special callback wrappers', function() {
     model1.trigger('test', 'eventParam');
     expect(eventSpy.callCount).to.eql(1);
     expect(eventSpy.calledWith('specialParam', 1, true, 'eventParam')).to.eql(true);
+  });
+
+  describe('#manageEvents', function() {
+    React.mixins.add('managedEventTester', {
+      mixins: ['events'],
+      getInitialState: function() {
+        this.manageEvents({
+          'prop:foo:test': 'onTest'
+        });
+        return null;
+      }
+    });
+
+    it('should work correctly before state has been created', function() {
+      var model1 = new Backbone.Model(),
+        obj = newComponent({
+        props: {
+          foo: model1
+        },
+        onTest: sinon.spy()
+      }, ['managedEventTester']);
+      obj.mount();
+
+      model1.trigger('test', 'eventParam');
+      expect(obj.onTest.callCount).to.eql(1);
+    });
   });
 });

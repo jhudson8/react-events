@@ -440,6 +440,24 @@
         };
     });
 
+    function handleEvents(events, context, initialize) {
+        var handlers = getState('_eventHandlers', context) || [], handler;
+        events = normalizeEvents(events);
+        for (var ev in events) {
+            if (events.hasOwnProperty(ev)) {
+                handler = createHandler(ev, events[ev], context);
+                if (handler.initialize) {
+                    handler.initialize.call(context);
+                }
+                handlers.push(handler);
+                if (initialize && context.isMounted()) {
+                    handler.on.call(this);
+                }
+            }
+        }
+        return handlers;
+    }
+
     //// REGISTER THE REACT MIXIN
     React.mixins.add('events', function() {
         var rtn = [{
@@ -465,23 +483,15 @@
                 };
             },
 
+            manageEvents: function(events) {
+                setState({
+                    '_eventHandlers': handleEvents(events, this, true)
+                }, this);
+            },
+
             getInitialState: function() {
-                var handlers = [];
-                if (this.events) {
-                    var events = normalizeEvents(this.events);
-                    var handler;
-                    for (var ev in events) {
-                        if (events.hasOwnProperty(ev)) {
-                            handler = createHandler(ev, events[ev], this);
-                            if (handler.initialize) {
-                                handler.initialize.call(this);
-                            }
-                            handlers.push(handler);
-                        }
-                    }
-                }
                 return {
-                    _eventHandlers: handlers
+                    _eventHandlers: handleEvents(this.events, this)
                 };
             },
 

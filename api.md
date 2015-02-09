@@ -271,6 +271,27 @@ React.createClass({
 ```
 
 
+### manageEvents (events)
+* ***events***: the events has that you would see on a React component
+
+This method can be used to the same functionality that a React component can use with the ```events``` hash.  This allows mixins to use all of the managed behavior and event callbacks provided with this project.
+
+```
+var MyMixin = {
+  getInitialState: function() {
+
+    this.manageEvents({
+      '*throttle(300)->window:resize': function() {
+        // this will be called (throttled) whenever the window resizes
+      }
+    });
+
+    return null;
+  }
+}
+```
+
+
 ### listen
 
 Utility mixin to expose managed Backbone.Events binding functions which are cleaned up when the component is unmounted.
