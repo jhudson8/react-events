@@ -250,6 +250,19 @@ React.createClass({
 })
 ```
 
+You can also pass in a target object as the first parameter (this object must implement the ```trigger``` method).
+
+```
+React.createClass({
+  mixins: ['triggerWith'],
+  render: function() {
+
+    // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
+    return <button type="button" onClick={this.triggerWith(someOtherObject, 'button-clicked', 'param1', 'param2')}>Click me</button>
+  }
+})
+```
+
 
 #### callWith(func[, parameters...])
 * ***func***: the event name

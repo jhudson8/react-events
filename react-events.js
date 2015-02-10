@@ -466,9 +466,16 @@
              */
             triggerWith: function() {
                 var args = Array.prototype.slice.call(arguments),
-                    self = this;
+                    target = this;
+
+                // allow the first parameter to be the target
+                if (typeof args[0] !== 'string') {
+                    target = args[0];
+                    args.splice(0, 1);
+                }
+
                 return function() {
-                    self.trigger.apply(self, args);
+                    target.trigger.apply(target, args);
                 };
             },
 

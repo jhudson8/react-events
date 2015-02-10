@@ -77,14 +77,28 @@ function newComponent(attributes, mixins) {
 
 
 describe('#triggerWith', function() {
-  it('should work', function() {
+  it('should work with the default (self as target)', function() {
     var obj = newComponent({});
     obj.mount();
     sinon.stub(obj, 'trigger');
     var callback = obj.triggerWith('foo', 'bar');
     callback();
     expect(obj.trigger.calledWith('foo', 'bar')).to.eql(true);
-  })
+  });
+
+  it('should work with a specific object as target', function() {
+    var obj = newComponent({}),
+        obj2 = {trigger: sinon.spy()};
+    obj.mount();
+
+    sinon.stub(obj, 'trigger');
+
+    var callback = obj.triggerWith(obj2, 'foo', 'bar');
+    callback();
+
+    expect(!!obj.trigger.callcount).to.eql(false);
+    expect(obj2.trigger.calledWith('foo', 'bar')).to.eql(true);
+  });
 });
 
 
