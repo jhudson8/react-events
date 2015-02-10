@@ -1,7 +1,7 @@
 {
   "name": "react-events",
   "main": "react-events.js",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "homepage": "https://github.com/jhudson8/react-events",
   "authors": [
     "Joe Hudson <joehud@gmail.com>"
