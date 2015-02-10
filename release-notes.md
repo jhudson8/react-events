@@ -2,7 +2,39 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.8.0...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.8.1...master)
+
+## v0.8.1 - February 10th, 2015
+- additional support external target with the triggerWith mixin - 5445d93
+
+A convienance method which allows for easy closure binding of component event triggering when React events occur.
+
+```
+React.createClass({
+  mixins: ['triggerWith'],
+  render: function() {
+
+    // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
+    return <button type="button" onClick={this.triggerWith('button-clicked', 'param1', 'param2')}>Click me</button>
+  }
+})
+```
+
+You can also pass in a target object as the first parameter (this object must implement the ```trigger``` method).
+
+```
+React.createClass({
+  mixins: ['triggerWith'],
+  render: function() {
+
+    // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
+    return <button type="button" onClick={this.triggerWith(someOtherObject, 'button-clicked', 'param1', 'param2')}>Click me</button>
+  }
+})
+```
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.8.0...v0.8.1)
 
 ## v0.8.0 - February 9th, 2015
 - add the manageEvents function to the "events" mixin - e8860f1
