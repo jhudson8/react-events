@@ -19,10 +19,3 @@ This project indludes/depends on [jhudson8/react-mixin-manager](https://github.c
 * [jhudson8/react-css-builder](https://github.com/jhudson8/react-css-builder)
 * [jhudson8/react-chartjs](https://github.com/jhudson8/react-chartjs)
 * [jhudson8/gulp-mocha-tdd](https://github.com/jhudson8/gulp-mocha-tdd) (React friendly)
-
-
-### Support me
-
-If you like this project you may support me by donating something on Gittip, starring this repository or reporting bugs and ideas in the issue section.
-
-[![gittip](http://jhudson8.github.io/react-mixin-manager/gittip-button.jpg)](https://gratipay.com/jhudson8/)
