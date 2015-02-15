@@ -2,7 +2,17 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.8.1...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v0.9.0...master)
+
+## v0.9.0 - February 15th, 2015
+- add "react-events" namespace - e2f9eb5
+
+All of the mixins defined in this project can either be referenced by the original mixin name (unless replaced) or their fully qualified name (prefixed with "react-events")
+
+For example, ```events``` or ```react-events.events```` can be used.  This gives you the flexibility to overwrite the ```events``` mixin name while still being able to access the react-events ```events``` mixin.
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.8.1...v0.9.0)
 
 ## v0.8.1 - February 10th, 2015
 - additional support external target with the triggerWith mixin - 5445d93
