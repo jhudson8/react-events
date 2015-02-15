@@ -49,7 +49,8 @@
         specialWrapper = /^\*([^\(]+)\(([^)]*)\)[->:]*(.*)/,
         noArgMethods = ['forceUpdate'],
         setState = React.mixins.setState,
-        getState = React.mixins.getState;
+        getState = React.mixins.getState,
+        namespace = 'react-events' + '.';
 
     /**
      *  Allow events to be referenced in a hierarchical structure.  All parts in the
@@ -459,7 +460,7 @@
     }
 
     //// REGISTER THE REACT MIXIN
-    React.mixins.add('events', function() {
+    React.mixins.add(namespace + 'events', function() {
         var rtn = [{
             /**
              * Return a callback fundtion that will trigger an event on "this" when executed with the provided parameters
@@ -560,7 +561,7 @@
     /**
      * Allow for managed bindings to any object which supports on/off.
      */
-    React.mixins.add('listen', {
+    React.mixins.add(namespace + 'listen', {
         componentDidMount: function() {
             // sanity check to prevent duplicate binding
             _watchedEventsUnbindAll(true, this);

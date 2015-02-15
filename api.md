@@ -43,7 +43,7 @@ React.createClass({
   events: {
     '{type}:{path}': (callback function or attribute name identifying a callback function)
   },
-  mixins: ['events']
+  mixins: ['events'] // or ['react-events.events']
 })
 ```
 The ```type``` and ```path``` values are specific to different event handlers.
@@ -59,7 +59,7 @@ window:{window event}
 Example
 ```
 React.createClass({
-  mixins: ['events'],
+  mixins: ['events'], // or ['react-events.events']
   events: {
     'window:scroll': 'onScroll'
   },
@@ -83,7 +83,7 @@ repeat:{duration in millis}
 Example
 ```
 React.createClass({
-  mixins: ['events'],
+  mixins: ['events'], // or ['react-events.events']
   events: {
     'repeat:3000': function() {
       // this will be called every 3 seconds only when the component is mounted
@@ -106,7 +106,7 @@ ref:{ref name}:{event name}
 Example
 ```
 React.createClass({
-  mixins: ['events'],
+  mixins: ['events'], // or ['react-events.events']
   events: {
     'ref:someComponent:something-happened': 'onSomethingHappened'
   },
@@ -131,7 +131,7 @@ prop:{ref name}:{event name}
 Example
 ```
 var MyComponent = React.createClass({
-  mixins: ['events'],
+  mixins: ['events'], // or ['react-events.events']
   events: {
     'prop:someProp:something-happened': 'onSomethingHappened'
   },
@@ -178,7 +178,7 @@ React.createClass({
   events: {
     'dom:click:button': 'onClick'
   },
-  mixins: ['events'],
+  mixins: ['events'], // or ['react-events.events']
   onClick: function() {
     // will fire when the button is clicked and "this" is the parent component
   }
@@ -212,7 +212,7 @@ This mixin is required if you want to be able to use declaritive event definitio
 For example
 ```
     React.createClass({
-      mixins: ['events'],
+      mixins: ['events'], // or ['react-events.events']
       events: {
         'window:scroll': 'onScroll'
       },
@@ -241,7 +241,7 @@ A convienance method which allows for easy closure binding of component event tr
 
 ```
 React.createClass({
-  mixins: ['triggerWith'],
+  mixins: ['events'], // or ['react-events.events']
   render: function() {
 
     // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
@@ -254,7 +254,7 @@ You can also pass in a target object as the first parameter (this object must im
 
 ```
 React.createClass({
-  mixins: ['triggerWith'],
+  mixins: ['events'], // or ['react-events.events']
   render: function() {
 
     // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
@@ -272,7 +272,7 @@ A convienance method which allows for easy closure binding of a callback functio
 
 ```
 React.createClass({
-  mixins: ['triggerWith'],
+  mixins: ['events'], // or ['react-events.events']
   render: function() {
 
     // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
@@ -291,7 +291,7 @@ This method can be used to the same functionality that a React component can use
 
 ```
 var MyMixin = {
-  mixins: ['events'],
+  mixins: ['events'], // or ['react-events.events']
   
   getInitialState: function() {
 
@@ -314,7 +314,8 @@ This is similar to the "modelEventAware" mixin but is not model specific.
 
 ```
     var MyClass React.createClass({
-      mixins: ['listen'],
+      mixins: ['listen'], // or ['react-events.listen']
+
       getInitialState: function() {
         this.listenTo(this.props.someObject, 'change', this.onChange);
         return null;
@@ -418,7 +419,7 @@ If you include [react-backbone](https://github.com/jhudson8/react-backbone) this
 You will the have the ability to do the following:
 ```
 var ChildComponent = React.createClass({
-  mixins: ['events'],
+  mixins: ['events'], // or ['react-events.events']
   ...
   onSomethingHappened: function() {
     this.trigger('something-happened');

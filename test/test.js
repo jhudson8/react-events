@@ -560,4 +560,9 @@ describe('special callback wrappers', function() {
       expect(obj.onTest.callCount).to.eql(1);
     });
   });
+
+  it('should work when using the namespace', function() {
+    // this will throw an error if it fails
+    newComponent({}, 'react-events.events');
+  });
 });
