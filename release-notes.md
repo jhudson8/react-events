@@ -11,6 +11,8 @@ All of the mixins defined in this project can either be referenced by the origin
 
 For example, ```events``` or ```react-events.events```` can be used.  This gives you the flexibility to overwrite the ```events``` mixin name while still being able to access the react-events ```events``` mixin.
 
+You must use react-mixin-manager >= 0.12.0
+
 
 [Commits](https://github.com/jhudson8/react-events/compare/v0.8.1...v0.9.0)
 
