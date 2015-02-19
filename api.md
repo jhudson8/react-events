@@ -14,109 +14,122 @@ Dependencies
 Installation
 --------------
 Browser:
+
 ```
-<script src=".../react[-min].js"></script>
-<script src=".../react-mixin-manager[-min].js"></script>
-<script src=".../react-events[-min].js"></script>
+    <script src=".../react[-min].js"></script>
+    <script src=".../react-mixin-manager[-min].js"></script>
+    <script src=".../react-events[-min].js"></script>
 ```
+
 CommonJS
+
 ```
-var React = require('react');
-require('react-mixin-manager')(React);
-require('react-events')(React);
+    var React = require('react');
+    require('react-mixin-manager')(React);
+    require('react-events')(React);
 ```
+
 AMD
+
 ```
-require(
-  ['react', 'react-mixin-manager', 'react-events'], function(React, reactMixinManager, reactEvents) {
-  reactMixinManager(React); 
-  reactEvents(React); 
-});
+    require(
+      ['react', 'react-mixin-manager', 'react-events'], function(React, reactMixinManager, reactEvents) {
+      reactMixinManager(React); 
+      reactEvents(React); 
+    });
 ```
 
 
 API: Event Binding Definitions
 --------------
 Event listeners are declared using the ```events``` attribute.  To add this support the ```events``` mixin ***must*** be included with your component mixins.
+
+```javascript
+    React.createClass({
+      events: {
+        '{type}:{path}': (callback function or attribute name identifying a callback function)
+      },
+      mixins: ['events'] // or ['react-events.events']
+    })
 ```
-React.createClass({
-  events: {
-    '{type}:{path}': (callback function or attribute name identifying a callback function)
-  },
-  mixins: ['events'] // or ['react-events.events']
-})
-```
+
 The ```type``` and ```path``` values are specific to different event handlers.
 
 ### window events
 Monitor window events (requires a global "window" variable).
 
 Syntax
-```
-window:{window event}
+
+```javascript
+    window:{window event}
 ```
 
 Example
-```
-React.createClass({
-  mixins: ['events'], // or ['react-events.events']
-  events: {
-    'window:scroll': 'onScroll'
-  },
-  onScroll: function() {
-    // will fire when a window scroll event has been triggered and "this" is the parent component
-  }
-});
+
+```javascript
+    React.createClass({
+      mixins: ['events'], // or ['react-events.events']
+      events: {
+        'window:scroll': 'onScroll'
+      },
+      onScroll: function() {
+        // will fire when a window scroll event has been triggered and "this" is the parent component
+      }
+    });
 ```
 
 ### repeat events
 Execute the callback every n milis
 
 Event signature
-```
-// repeat every * interval
-repeat:{duration in millis}
-// repeat every * interval (only when the browser tab is active)
-!repeat:{duration in millis}
+
+```javascript
+    // repeat every * interval
+    repeat:{duration in millis}
+    // repeat every * interval (only when the browser tab is active)
+    !repeat:{duration in millis}
 ```
 
 Example
-```
-React.createClass({
-  mixins: ['events'], // or ['react-events.events']
-  events: {
-    'repeat:3000': function() {
-      // this will be called every 3 seconds only when the component is mounted
-    },
-    '!repeat:3000': function() {
-      // same as above but will *only* be called when this web page is the active page (requestAnimationFrame)
-    },
-  }
-});
+
+```javascript
+    React.createClass({
+      mixins: ['events'], // or ['react-events.events']
+      events: {
+        'repeat:3000': function() {
+          // this will be called every 3 seconds only when the component is mounted
+        },
+        '!repeat:3000': function() {
+          // same as above but will *only* be called when this web page is the active page (requestAnimationFrame)
+        },
+      }
+    });
 ```
 
 ### component by ref events
 Execute the callback when events are triggered on the components identified by the [this](http://facebook.github.io/react/docs/more-about-refs.html) value.
 
 Event signature
-```
-ref:{ref name}:{event name}
+
+```javascript
+    ref:{ref name}:{event name}
 ```
 
 Example
-```
-React.createClass({
-  mixins: ['events'], // or ['react-events.events']
-  events: {
-    'ref:someComponent:something-happened': 'onSomethingHappened'
-  },
-  onSomethingHappened: function() {
-    // "someComponent" triggered the "something-happened" event and "this" is the parent component
-  },
-  render: function() {
-    return <div><SomeComponent ref="someComponent" .../></div>;
-  }
-});
+
+```javascript
+    React.createClass({
+      mixins: ['events'], // or ['react-events.events']
+      events: {
+        'ref:someComponent:something-happened': 'onSomethingHappened'
+      },
+      onSomethingHappened: function() {
+        // "someComponent" triggered the "something-happened" event and "this" is the parent component
+      },
+      render: function() {
+        return <div><SomeComponent ref="someComponent" .../></div>;
+      }
+    });
 ```
 
 
@@ -124,23 +137,25 @@ React.createClass({
 Execute the callback when events are triggered on the objects identified by the property value.
 
 Event signature
-```
-prop:{ref name}:{event name}
+
+```javascript
+    prop:{ref name}:{event name}
 ```
 
 Example
-```
-var MyComponent = React.createClass({
-  mixins: ['events'], // or ['react-events.events']
-  events: {
-    'prop:someProp:something-happened': 'onSomethingHappened'
-  },
-  onSomethingHappened: function() {
-    // "someProp" triggered the "something-happened" event and "this" is the parent component
-  }
-});
-...
-<MyComponent someProp={myObject}/>
+
+```javascript
+    var MyComponent = React.createClass({
+      mixins: ['events'], // or ['react-events.events']
+      events: {
+        'prop:someProp:something-happened': 'onSomethingHappened'
+      },
+      onSomethingHappened: function() {
+        // "someProp" triggered the "something-happened" event and "this" is the parent component
+      }
+    });
+    ...
+    <MyComponent someProp={myObject}/>
 ```
 
 ### DOM events
@@ -148,58 +163,62 @@ To avoid a a jquery dependency, this is not provided with react-events.  However
 support, copy/paste the code below
 
 Event signature
-```
-dom:{DOM events separated by space}:{query path}
+
+```javascript
+    dom:{DOM events separated by space}:{query path}
 ```
 
 Copy/Paste
-```
-/**
- * Bind to DOM element events (recommended solution is to use React "on..." attributes)
- * format: "dom:{event names separated with space}:{element selector}"
- * example: events: { 'dom:click:a': 'onAClick' }
- */
-React.events.handle('dom', function(options, callback) {
-  var parts = options.path.match(splitter);
-  return {
-    on: function() {
-      $(this.getDOMNode()).on(parts[1], parts[2], callback);
-    },
-    off: function() {
-      $(this.getDOMNode()).off(parts[1], parts[2], callback);
-    }
-  };
-});
+
+```javascript
+    /**
+     * Bind to DOM element events (recommended solution is to use React "on..." attributes)
+     * format: "dom:{event names separated with space}:{element selector}"
+     * example: events: { 'dom:click:a': 'onAClick' }
+     */
+    React.events.handle('dom', function(options, callback) {
+      var parts = options.path.match(splitter);
+      return {
+        on: function() {
+          $(this.getDOMNode()).on(parts[1], parts[2], callback);
+        },
+        off: function() {
+          $(this.getDOMNode()).off(parts[1], parts[2], callback);
+        }
+      };
+    });
 ```
 
 Example
-```
-React.createClass({
-  events: {
-    'dom:click:button': 'onClick'
-  },
-  mixins: ['events'], // or ['react-events.events']
-  onClick: function() {
-    // will fire when the button is clicked and "this" is the parent component
-  }
-});
+
+```javascript
+    React.createClass({
+      events: {
+        'dom:click:button': 'onClick'
+      },
+      mixins: ['events'], // or ['react-events.events']
+      onClick: function() {
+        // will fire when the button is clicked and "this" is the parent component
+      }
+    });
 ```
 
 
 ### application events
 If you want to provide declaritive event support for a custom global application event handler (that implements ```on```/```off```), you can copy/paste the code below.
 
-```
-React.events.handle('app', {
-  target: myGlobalEventHandler
-});
+```javascript
+    React.events.handle('app', {
+      target: myGlobalEventHandler
+    });
 ```
 
 Example
-```
-  events: {
-    'app:some-event': 'onSomeEvent'
-  }
+
+```javascript
+    events: {
+      'app:some-event': 'onSomeEvent'
+    }
 ```
 
 
@@ -210,7 +229,8 @@ API: Mixins
 This mixin is required if you want to be able to use declaritive event definitions.
 
 For example
-```
+
+```javascript
     React.createClass({
       mixins: ['events'], // or ['react-events.events']
       events: {
@@ -229,8 +249,8 @@ The event handler implementation is included with [react-backbone](https://githu
 * on
 * off
 
-```
-React.events.mixin = myObjectThatSupportsEventMethods;
+```javascript
+    React.events.mixin = myObjectThatSupportsEventMethods;
 ```
 
 #### triggerWith(event[, parameters...])
@@ -239,28 +259,28 @@ React.events.mixin = myObjectThatSupportsEventMethods;
 
 A convienance method which allows for easy closure binding of component event triggering when React events occur.
 
-```
-React.createClass({
-  mixins: ['events'], // or ['react-events.events']
-  render: function() {
+```javascript
+    React.createClass({
+      mixins: ['events'], // or ['react-events.events']
+      render: function() {
 
-    // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
-    return <button type="button" onClick={this.triggerWith('button-clicked', 'param1', 'param2')}>Click me</button>
-  }
-})
+        // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
+        return <button type="button" onClick={this.triggerWith('button-clicked', 'param1', 'param2')}>Click me</button>
+      }
+    });
 ```
 
 You can also pass in a target object as the first parameter (this object must implement the ```trigger``` method).
 
-```
-React.createClass({
-  mixins: ['events'], // or ['react-events.events']
-  render: function() {
+```javascript
+    React.createClass({
+      mixins: ['events'], // or ['react-events.events']
+      render: function() {
 
-    // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
-    return <button type="button" onClick={this.triggerWith(someOtherObject, 'button-clicked', 'param1', 'param2')}>Click me</button>
-  }
-})
+        // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
+        return <button type="button" onClick={this.triggerWith(someOtherObject, 'button-clicked', 'param1', 'param2')}>Click me</button>
+      }
+    });
 ```
 
 
@@ -270,17 +290,17 @@ React.createClass({
 
 A convienance method which allows for easy closure binding of a callback function with arguments
 
-```
-React.createClass({
-  mixins: ['events'], // or ['react-events.events']
-  render: function() {
+```javascript
+    React.createClass({
+      mixins: ['events'], // or ['react-events.events']
+      render: function() {
 
-    // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
-    for (var i=0; i<something.length; i++) {
-      return <button type="button" onClick={this.callWith(onSomething, something[i])}>Click me</button>
-    }
-  }
-})
+        // when the button is clicked, the parent component will have 'button-clicked' triggered with the provided parameters
+        for (var i=0; i<something.length; i++) {
+          return <button type="button" onClick={this.callWith(onSomething, something[i])}>Click me</button>
+        }
+      }
+    });
 ```
 
 
@@ -289,21 +309,21 @@ React.createClass({
 
 This method can be used to the same functionality that a React component can use with the ```events``` hash.  This allows mixins to use all of the managed behavior and event callbacks provided with this project.
 
-```
-var MyMixin = {
-  mixins: ['events'], // or ['react-events.events']
-  
-  getInitialState: function() {
+```javascript
+    var MyMixin = {
+      mixins: ['events'], // or ['react-events.events']
+      
+      getInitialState: function() {
 
-    this.manageEvents({
-      '*throttle(300)->window:resize': function() {
-        // this will be called (throttled) whenever the window resizes
+        this.manageEvents({
+          '*throttle(300)->window:resize': function() {
+            // this will be called (throttled) whenever the window resizes
+          }
+        });
+
+        return null;
       }
-    });
-
-    return null;
-  }
-}
+    }
 ```
 
 
@@ -312,7 +332,7 @@ var MyMixin = {
 Utility mixin to expose managed Backbone.Events binding functions which are cleaned up when the component is unmounted.
 This is similar to the "modelEventAware" mixin but is not model specific.
 
-```
+```javascript
     var MyClass React.createClass({
       mixins: ['listen'], // or ['react-events.listen']
 
@@ -369,37 +389,39 @@ API
 For example, the following are the implementations of the event handlers provided by default:
 
 ***window events (standard event handler type with custom on/off methods and static target)***
-```
-React.events.handle('window', {
-  target: window,
-  onKey: 'addEventListener',
-  offKey: 'removeEventListener'
-});
+
+```javascript
+    React.events.handle('window', {
+      target: window,
+      onKey: 'addEventListener',
+      offKey: 'removeEventListener'
+    });
 ```
 
-```
-// this will match any key that starts with custom-
-React.events.handle(/custom-.*/, function(options, callback) {
-  // if the event declaration was "custom-foo:bar"
-  var key = options.key;  // customm-foo
-  var path = options.path; // bar
-  ...
-}
+```javascript
+    // this will match any key that starts with custom-
+    React.events.handle(/custom-.*/, function(options, callback) {
+      // if the event declaration was "custom-foo:bar"
+      var key = options.key;  // customm-foo
+      var path = options.path; // bar
+      ...
+    }
 ```
 
 ***DOM events (custom handler which must return an object with on/off methods)***
-```
-  React.events.handle('dom', function(options, callback) {
-    var parts = options.path.match(splitter);
-    return {
-      on: function() {
-        $(this.getDOMNode()).on(parts[1], parts[2], callback);
-      },
-      off: function() {
-        $(this.getDOMNode()).off(parts[1], parts[2], callback);
-      }
-    };
-  });
+
+```javascript
+    React.events.handle('dom', function(options, callback) {
+      var parts = options.path.match(splitter);
+      return {
+        on: function() {
+          $(this.getDOMNode()).on(parts[1], parts[2], callback);
+        },
+        off: function() {
+          $(this.getDOMNode()).off(parts[1], parts[2], callback);
+        }
+      };
+    });
 ```
 
 
@@ -410,35 +432,36 @@ Sections
 
 When using the ```ref``` event handler, the component should support the on/off methods.  While this script does not include the implementation of that, it does provide a hook for including your own impl when the ```events``` mixin is included using ```React.events.mixin```.
 
-```
-React.events.mixin = objectThatHasOnOffMethods;
+```javascript
+    React.events.mixin = objectThatHasOnOffMethods;
 ```
 
 If you include [react-backbone](https://github.com/jhudson8/react-backbone) this will be set automatically for you as well as ```model``` event bindings.
 
 You will the have the ability to do the following:
-```
-var ChildComponent = React.createClass({
-  mixins: ['events'], // or ['react-events.events']
-  ...
-  onSomethingHappened: function() {
-    this.trigger('something-happened');
-  }
-});
-...
 
-var ParentComponent = React.createClass({
-  mixins: ['events', 'modelEventBinder'],
-  events: {
-    'model:onChange': 'onModelChange',
-    'ref:myComponent:something-happened': 'onSomethingHappened'
-  },
-  render: function() {
-    return <div><ChildComponent ref="myComponent"/></div>;
-  },
-  onSomethingHappened: function() { ... },
-  onModelChange: function() { ... }
-});
+```javascript
+    var ChildComponent = React.createClass({
+      mixins: ['events'], // or ['react-events.events']
+      ...
+      onSomethingHappened: function() {
+        this.trigger('something-happened');
+      }
+    });
+    ...
+
+    var ParentComponent = React.createClass({
+      mixins: ['events', 'modelEventBinder'],
+      events: {
+        'model:onChange': 'onModelChange',
+        'ref:myComponent:something-happened': 'onSomethingHappened'
+      },
+      render: function() {
+        return <div><ChildComponent ref="myComponent"/></div>;
+      },
+      onSomethingHappened: function() { ... },
+      onModelChange: function() { ... }
+    });
 ```
 
 ### Advanced Features
@@ -447,44 +470,45 @@ var ParentComponent = React.createClass({
 
 The event bindings can be declared as a tree structure.  Each element in the tree will be appended
 to the parent element using the ```:``` separator.  For example
-```
-events: {
-  prop: {
-    'foo:test1': 'test1',
-    foo: {
-      test2: 'test2',
-      test3: 'test3'
+
+```javascript
+    events: {
+      prop: {
+        'foo:test1': 'test1',
+        foo: {
+          test2: 'test2',
+          test3: 'test3'
+        }
+      },
+      'prop:bar:test4': 'test4'
     }
-  },
-  'prop:bar:test4': 'test4'
-}
-```
-will be converted to
-```
-events: {
-  'prop:foo:test1': 'test1',
-  'prop:foo:test2': 'test2',
-  'prop:foo:test3': 'test3',
-  'prop:bar:test4': 'test4'
-}
+    ```
+    will be converted to
+    ```
+    events: {
+      'prop:foo:test1': 'test1',
+      'prop:foo:test2': 'test2',
+      'prop:foo:test3': 'test3',
+      'prop:bar:test4': 'test4'
+    }
 ```
 
 #### Instance References
 
 If you need to reference ```this``` when declaring your event handler, you can use an object with a ```callback``` object.
 
-```
-var MyClass = React.createClass({
-  mixins: ['events'],
-  events: {
-    'window:resize': {
-      callback: function() {
-        // return the callback function;  executed after the instance has been created
-        // so "this" can be referenced as the react component instance
+```javascript
+    var MyClass = React.createClass({
+      mixins: ['events'],
+      events: {
+        'window:resize': {
+          callback: function() {
+            // return the callback function;  executed after the instance has been created
+            // so "this" can be referenced as the react component instance
+          }
+        }
       }
-    }
-  }
-});
+    });
 ```
 
 
@@ -493,34 +517,37 @@ var MyClass = React.createClass({
 It is sometimes useful to wrap callback methods for throttling, cacheing or other purposes.  Because an instance is required for this, the previously described instance reference ```callback``` can be used but can be verbose.  Special callback wrappers can be used to accomplish this.  If the event name is prefixed with ```*someSpecialName(args)->...``` the ```someSpecialName``` callback wrapper will be invoked.
 
 This is best described with an example
-```
-  events: {
-    '*throttle(300)->window:resize': 'forceUpdate'
-  }
+
+```javascript
+    events: {
+      '*throttle(300)->window:resize': 'forceUpdate'
+    }
 ```
 
 To implement your own special handler, just reference a wrapper function by name on ```React.events.specials```.  For example:
-```
-// callback is the runtime event callback and args are the special definition arguments
-React.events.specials.throttle = function(callback, args) {
-  // the arguments provided here are the runtime event arguments
-  return function() {
-    var throttled = this.throttled || _.throttle(callback, args[0]);
-    throttled.apply(this, arguments);
-  }
-}
+
+```javascript
+    // callback is the runtime event callback and args are the special definition arguments
+    React.events.specials.throttle = function(callback, args) {
+      // the arguments provided here are the runtime event arguments
+      return function() {
+        var throttled = this.throttled || _.throttle(callback, args[0]);
+        throttled.apply(this, arguments);
+      }
+    }
 ```
 
 If the runtime event was triggered triggered with arguments ("foo"), the actual parameters would look like this
-```
-React.events.specials.throttle = function(callback, [3000]) {
-  // the arguments provided here are the runtime event arguments
-  return function("foo") {
-    // "this" will be an object unique to this special definition and remain consistent through multiple callbacks
-    var throttled = this.throttled || _.throttle(callback, 3000);
-    throttled.apply(this, arguments);
-  }
-}
+
+```javascript
+    React.events.specials.throttle = function(callback, [3000]) {
+      // the arguments provided here are the runtime event arguments
+      return function("foo") {
+        // "this" will be an object unique to this special definition and remain consistent through multiple callbacks
+        var throttled = this.throttled || _.throttle(callback, 3000);
+        throttled.apply(this, arguments);
+      }
+    }
 ```
 
 While no special handlers are implemented by default, by including [react-backbone](https://github.com/jhudson8/react-backbone), the following special handlers are available (see [underscore](http://underscorejs.org) for more details)
