@@ -15,7 +15,5 @@ This project indludes/depends on [jhudson8/react-mixin-manager](https://github.c
 ### Other React projects that may interest you
 
 * [jhudson8/react-backbone](https://github.com/jhudson8/react-backbone)
-* [jhudson8/react-semantic-ui](https://github.com/jhudson8/react-semantic-ui)
-* [jhudson8/react-css-builder](https://github.com/jhudson8/react-css-builder)
 * [jhudson8/react-chartjs](https://github.com/jhudson8/react-chartjs)
-* [jhudson8/gulp-mocha-tdd](https://github.com/jhudson8/gulp-mocha-tdd) (React friendly)
+
