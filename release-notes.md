@@ -2,7 +2,19 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v0.9.0...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v1.0.0...master)
+
+## v1.0.0 - April 17th, 2015
+There are no longer initialization requirements for react-events. React.events no longer exists - it is now the return value from the react-events require.
+
+The required changes to your app are as follows:
+
+* the initialization code is now just ```require('react-events');'''
+* All code referencing React.events.whatever must now change to ReactEvents.whatever (assuming ReactEvents = require('react-events'))
+
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v0.9.0...v1.0.0)
 
 ## v0.9.0 - February 15th, 2015
 - add "react-events" namespace - e2f9eb5
