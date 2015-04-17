@@ -24,18 +24,15 @@ Browser:
 CommonJS
 
 ```
-    var React = require('react');
-    require('react-mixin-manager')(React);
-    require('react-events')(React);
+    var ReactEvents = require('react-events');
 ```
 
 AMD
 
 ```
     require(
-      ['react', 'react-mixin-manager', 'react-events'], function(React, reactMixinManager, reactEvents) {
-      reactMixinManager(React); 
-      reactEvents(React); 
+      ['react-events'], function(ReactEvents) {
+        ...
     });
 ```
 
@@ -176,7 +173,7 @@ Copy/Paste
      * format: "dom:{event names separated with space}:{element selector}"
      * example: events: { 'dom:click:a': 'onAClick' }
      */
-    React.events.handle('dom', function(options, callback) {
+    require('react-events').handle('dom', function(options, callback) {
       var parts = options.path.match(splitter);
       return {
         on: function() {
@@ -208,7 +205,7 @@ Example
 If you want to provide declaritive event support for a custom global application event handler (that implements ```on```/```off```), you can copy/paste the code below.
 
 ```javascript
-    React.events.handle('app', {
+    require('react-events').handle('app', {
       target: myGlobalEventHandler
     });
 ```
@@ -243,14 +240,14 @@ For example
 
 In addition, it also includes component state binding for the event handler implementation (not included).
 
-The event handler implementation is included with [react-backbone](https://github.com/jhudson8/react-backbone) or can be specified  by setting ```React.events.mixin```.  The event handler is simply an object that contains method implementations for
+The event handler implementation is included with [react-backbone](https://github.com/jhudson8/react-backbone) or can be specified  by setting ```require('react-events').mixin```.  The event handler is simply an object that contains method implementations for
 
 * trigger
 * on
 * off
 
 ```javascript
-    React.events.mixin = myObjectThatSupportsEventMethods;
+    require('react-events').mixin = myObjectThatSupportsEventMethods;
 ```
 
 #### triggerWith(event[, parameters...])
@@ -374,7 +371,7 @@ Unbind event handler created with ```listenTo``` or ```listenToOnce```
 
 API
 --------
-### React.events
+### react-events
 
 #### handle (identifier, options) or (identifier, handler)
 * ***identifier***: *{string or regular expression}* the event type (first part of event definition)
@@ -391,7 +388,7 @@ For example, the following are the implementations of the event handlers provide
 ***window events (standard event handler type with custom on/off methods and static target)***
 
 ```javascript
-    React.events.handle('window', {
+    require('react-events').handle('window', {
       target: window,
       onKey: 'addEventListener',
       offKey: 'removeEventListener'
@@ -400,7 +397,7 @@ For example, the following are the implementations of the event handlers provide
 
 ```javascript
     // this will match any key that starts with custom-
-    React.events.handle(/custom-.*/, function(options, callback) {
+    require('react-events').handle(/custom-.*/, function(options, callback) {
       // if the event declaration was "custom-foo:bar"
       var key = options.key;  // customm-foo
       var path = options.path; // bar
@@ -411,7 +408,7 @@ For example, the following are the implementations of the event handlers provide
 ***DOM events (custom handler which must return an object with on/off methods)***
 
 ```javascript
-    React.events.handle('dom', function(options, callback) {
+    require('react-events').handle('dom', function(options, callback) {
       var parts = options.path.match(splitter);
       return {
         on: function() {
@@ -430,10 +427,10 @@ Sections
 
 ### React Component Events
 
-When using the ```ref``` event handler, the component should support the on/off methods.  While this script does not include the implementation of that, it does provide a hook for including your own impl when the ```events``` mixin is included using ```React.events.mixin```.
+When using the ```ref``` event handler, the component should support the on/off methods.  While this script does not include the implementation of that, it does provide a hook for including your own impl when the ```events``` mixin is included using ```require('react-events').mixin```.
 
 ```javascript
-    React.events.mixin = objectThatHasOnOffMethods;
+    require('react-events').mixin = objectThatHasOnOffMethods;
 ```
 
 If you include [react-backbone](https://github.com/jhudson8/react-backbone) this will be set automatically for you as well as ```model``` event bindings.
@@ -524,11 +521,11 @@ This is best described with an example
     }
 ```
 
-To implement your own special handler, just reference a wrapper function by name on ```React.events.specials```.  For example:
+To implement your own special handler, just reference a wrapper function by name on ```require('react-events').specials```.  For example:
 
 ```javascript
     // callback is the runtime event callback and args are the special definition arguments
-    React.events.specials.throttle = function(callback, args) {
+    require('react-events').specials.throttle = function(callback, args) {
       // the arguments provided here are the runtime event arguments
       return function() {
         var throttled = this.throttled || _.throttle(callback, args[0]);
@@ -540,7 +537,7 @@ To implement your own special handler, just reference a wrapper function by name
 If the runtime event was triggered triggered with arguments ("foo"), the actual parameters would look like this
 
 ```javascript
-    React.events.specials.throttle = function(callback, [3000]) {
+    require('react-events').specials.throttle = function(callback, [3000]) {
       // the arguments provided here are the runtime event arguments
       return function("foo") {
         // "this" will be an object unique to this special definition and remain consistent through multiple callbacks
@@ -562,4 +559,4 @@ While no special handlers are implemented by default, by including [react-backbo
 
 #### Custom Event Handlers
 
-All events supported by default use the same API as the custom event handler.  Using ```React.events.handle```, you can add support for a custom event handler.  This could be useful for adding an application specific global event bus for example.
+All events supported by default use the same API as the custom event handler.  Using ```require('react-events').handle```, you can add support for a custom event handler.  This could be useful for adding an application specific global event bus for example.
