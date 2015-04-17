@@ -25,31 +25,27 @@
  */
 (function(main) {
     if (typeof define === 'function' && define.amd) {
-        define([], function() {
-            // with AMD
-            //  require(
-            //    ['react', 'react-events'], function(React, reactEvents) {
-            //    reactEvents(React); 
-            //  });
-            return main;
+        define(['react-mixin-manager'], function(ReactMixinManager) {
+            // AMD
+            return main(ReactMixinManager);
         });
     } else if (typeof exports !== 'undefined' && typeof require !== 'undefined') {
-        // with CommonJS
-        // require('react-events')(require('react'));
-        module.exports = main;
+        // CommonJS
+        var ReactMixinManager = require('react-mixin-manager');
+        module.exports = main(ReactMixinManager);
     } else {
-        main(React);
+        // browser
+        main(ReactMixinManager);
     }
-})(function(React) {
+})(function(ReactMixinManager) {
 
-    // main body start
     var handlers = {},
         patternHandlers = [],
         splitter = /^([^:]+):?(.*)/,
         specialWrapper = /^\*([^\(]+)\(([^)]*)\)[->:]*(.*)/,
         noArgMethods = ['forceUpdate'],
-        setState = React.mixins.setState,
-        getState = React.mixins.getState,
+        setState = ReactMixinManager.setState,
+        getState = ReactMixinManager.getState,
         namespace = 'react-events' + '.';
 
     /**
@@ -102,7 +98,7 @@
                 _data[name] = data[name];
             }
         }
-        var watchedEvents = React.mixins.getState('__watchedEvents', this);
+        var watchedEvents = getState('__watchedEvents', this);
         if (!watchedEvents) {
             watchedEvents = [];
             setState({
@@ -209,7 +205,7 @@
                 /*jshint evil: true */
                 args = eval('[' + match[2] + ']'),
                 rest = match[3],
-                specialHandler = React.events.specials[specialMethodName];
+                specialHandler = eventManager.specials[specialMethodName];
             if (specialHandler) {
                 if (args.length === 1 && args[0] === '') {
                     args = [];
@@ -280,7 +276,7 @@
         }
     };
 
-    var eventManager = React.events = {
+    var eventManager = {
         // placeholder for special methods
         specials: {},
 
@@ -460,7 +456,8 @@
     }
 
     //// REGISTER THE REACT MIXIN
-    React.mixins.add(namespace + 'events', function() {
+
+    ReactMixinManager.add(namespace + 'events', function() {
         var rtn = [{
             /**
              * Return a callback fundtion that will trigger an event on "this" when executed with the provided parameters
@@ -561,7 +558,7 @@
     /**
      * Allow for managed bindings to any object which supports on/off.
      */
-    React.mixins.add(namespace + 'listen', {
+    ReactMixinManager.add(namespace + 'listen', {
         componentDidMount: function() {
             // sanity check to prevent duplicate binding
             _watchedEventsUnbindAll(true, this);
@@ -603,6 +600,6 @@
             manageEvent.call(this, 'off', data);
         }
     });
-    // main body end
 
+    return eventManager;
 });

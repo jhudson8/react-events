@@ -21,11 +21,11 @@ global.window = global.window || {
 };
 
 // intitialize mixin-dependencies
-require('react-mixin-manager')(React);
-require('../react-events')(React, $);
+var ReactMixinManager = require('react-mixin-manager');
+var ReactEvents = require('../react-events');
 
 function newComponent(attributes, mixins) {
-  mixins = mixins ? React.mixins.get(mixins) : React.mixins.get('events');
+  mixins = mixins ? ReactMixinManager.get(mixins) : ReactMixinManager.get('events');
 
   var obj = {
     getDOMNode: sinon.spy(),
@@ -247,7 +247,7 @@ describe('custom event bindings', function() {
 
   it('standard methods (on/off) and target callback (factory)', function() {
     var _handler = handler;
-    React.events.handle('custom1', {
+    ReactEvents.handle('custom1', {
       target: function() {
         return _handler;
       }
@@ -269,7 +269,7 @@ describe('custom event bindings', function() {
 
   it('custom methods (on/off) and static target', function() {
     var _handler = handler;
-    React.events.handle('custom2', {
+    ReactEvents.handle('custom2', {
       target: _handler,
       onKey: 'onCustom',
       offKey: 'offCustom'
@@ -291,7 +291,7 @@ describe('custom event bindings', function() {
 
   it('should not provide any arguments if the handler method is "forceUpdate"', function() {
     var _handler = handler;
-    React.events.handle('custom3', {
+    ReactEvents.handle('custom3', {
       target: _handler
     });
 
@@ -307,7 +307,7 @@ describe('custom event bindings', function() {
 
   it('should handle regular expression handlers', function() {
     var _handler = handler;
-    React.events.handle(/custom-.*/, {
+    ReactEvents.handle(/custom-.*/, {
       target: _handler,
       onKey: 'onCustom',
       offKey: 'offCustom'
@@ -456,7 +456,7 @@ describe('special callback wrappers', function() {
       callback.apply(this, _args);
     }
   });
-  React.events.specials.test = spy;
+  ReactEvents.specials.test = spy;
   beforeEach(function() {
     spy.reset();
   });
@@ -536,7 +536,7 @@ describe('special callback wrappers', function() {
   });
 
   describe('#manageEvents', function() {
-    React.mixins.add('managedEventTester', {
+    ReactMixinManager.add('managedEventTester', {
       mixins: ['events'],
       getInitialState: function() {
         this.manageEvents({

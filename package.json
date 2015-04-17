@@ -16,9 +16,12 @@
     "react-mixin-manager",
     "events"
   ],
+  "peerDependencies": {
+    "react-mixin-manager": ">=1.0.0"
+  },
   "devDependencies": {
     "underscore": "~1.7",
-    "react-mixin-manager": "*",
+    "react-mixin-manager": ">=1.0.0",
     "react": "~0.12",
     "backbone": "~1.1",
     "chai": "~1.10",
