@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/react-events/compare/v1.0.0...master)
+[Commits](https://github.com/jhudson8/react-events/compare/v1.0.1...master)
+
+## v1.0.1 - May 9th, 2015
+- bug fix: in-browser source include loading - 4d5fe09
+
+
+[Commits](https://github.com/jhudson8/react-events/compare/v1.0.0...v1.0.1)
 
 ## v1.0.0 - April 17th, 2015
 There are no longer initialization requirements for react-events. React.events no longer exists - it is now the return value from the react-events require.
