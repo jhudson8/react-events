@@ -31,11 +31,10 @@
         });
     } else if (typeof exports !== 'undefined' && typeof require !== 'undefined') {
         // CommonJS
-        var ReactMixinManager = require('react-mixin-manager');
-        module.exports = main(ReactMixinManager);
+        module.exports = main(require('react-mixin-manager'));
     } else {
         // browser
-        main(ReactMixinManager);
+        ReactEvents = main(ReactMixinManager);
     }
 })(function(ReactMixinManager) {
 
