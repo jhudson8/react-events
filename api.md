@@ -280,6 +280,11 @@ You can also pass in a target object as the first parameter (this object must im
     });
 ```
 
+Remember that you *must* (if not using [react-backbone]()) set the event handler mixin (the thing that implements on/off/trigger).
+
+```javascript
+    require('react-events').mixin = OnOffTriggerImpl;
+```
 
 #### callWith(func[, parameters...])
 * ***func***: the event name
